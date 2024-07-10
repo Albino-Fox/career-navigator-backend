@@ -52,7 +52,25 @@ async function main() {
 
 
   //D
-  
+  app.delete("/api/v1/delete/test_subscribers", async (req : Request, res : Response) => {
+    console.log(`Recieved DELETE request: ${JSON.stringify(req.body)}`);
+    await db.testSubscribers.destroy({
+      where: {
+        id: req.body.id,
+      },
+    })
+      .then(result => {
+        if (result === 1) {
+          res.send(`${req.body.id} has been deleted.`);
+        } else {
+          res.send(`${req.body.id} is not found`);
+        }
+      })
+      .catch(err => {
+        res.send(`Something went wrong...`);
+        console.error(err);
+      });
+    });
 };
 
 main();
