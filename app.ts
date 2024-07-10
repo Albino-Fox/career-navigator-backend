@@ -1,27 +1,57 @@
 const express = require('express');
-import {Request, Response} from "express"; // bruh
+import {Request, Response} from "express";
 
+const { Op } = require ('sequelize');
+
+const bodyParser = require('body-parser');
 const Database = require('@/database.ts')
 const config = require('@/config.ts');
 
 async function main() {
   let app = express();
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({extended: true}));
+
   app.listen(config.port, config.host, () => {
     console.log(`Running on ${config.host} with port ${config.port}`);
   })
 
   const db = new Database();
   await db.sequelize.sync();
-  let records = await db.testSubscribers.findAll();
-  db.testSubscribers.create({
-    username: `testo${records.length}`,
-    subscription_date: new Date(Date.now()).toString(),
-  }).then((result) => console.log(`User ${result.username} created`))
-    .catch(err => console.error(err));
-  
-  app.get("/now", (req : Request, res : Response) => {
-    res.send(new Date(Date.now()).toString());
+
+  //C
+  app.post("/api/v1/create/test_subscribers", async (req : Request, res : Response) => {
+    console.log(`Recieved CREATE request: ${JSON.stringify(req.body)}`);
+    await db.testSubscribers.create({
+      username: req.body.username,
+      subscription_date: new Date(Date.now()).toString(),
+    })
+      .then((record) => {
+        res.send(`${record.username} was created`);
+        console.log(`User ${record.username} created`);
+      })
+      .catch(err => {
+        res.send(`Something went wrong...`);
+        console.error(err.original.sqlMessage);
+      });
   });
+  
+  //R
+  app.get("/api/v1/get/test_subscribers", async (req : Request, res : Response) => {
+    await db.testSubscribers.findAll()
+      .then(data => {
+        res.json(data);
+      })
+      .catch(err => {
+        res.send(`Something went wrong...`);
+        console.error(err.original.sqlMessage);
+      });
+  });
+  
+  //U
+
+
+  //D
   
 };
 
