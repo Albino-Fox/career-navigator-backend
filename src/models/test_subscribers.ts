@@ -9,6 +9,8 @@ module.exports = (sequelize: Sequelize) => {
     },
     username: {
       type: DataTypes.STRING(255),
+      unique: true,
+      allowNull: false,
     },
     subscription_date: {
       type: DataTypes.DATE,
