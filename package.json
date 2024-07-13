@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
-    "run": "npx tsx app.ts"
+    "start": "npx tsx app.ts"
   },
   "author": "albino-fox",
   "license": "ISC",
