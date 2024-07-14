@@ -1,14 +1,14 @@
-const express = require('express');
-import {Request, Response} from "express";
+import express from 'express';
+import { Request, Response } from "express";
 
-const bodyParser = require('body-parser');
-const bodyParserErrorHandler = require('express-body-parser-error-handler');
+import bodyParser from 'body-parser';
+import bodyParserErrorHandler from 'express-body-parser-error-handler';
 
-const Database = require('@/database.ts')
-const config = require('@/config.ts');
+import Database from './src/database.ts';
+import config from './src/config.ts';
 
 
-function stringifyJSON(json) {
+function stringifyJSON(json: JSON) {
   try {
     const jsonStr = JSON.stringify(json);
     return jsonStr;
@@ -32,7 +32,7 @@ async function main() {
   })
 
   const db = new Database();
-  await db.sequelize.sync();
+  await db.sequelize!.sync();
 
   //C
   app.post("/api/v1/create/test_subscribers", async (req : Request, res : Response) => {

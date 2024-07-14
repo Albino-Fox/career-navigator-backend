@@ -1,36 +1,30 @@
-const config = require('@/config.ts');
+import config from '@/config.ts';
 import { Sequelize } from 'sequelize';
-const TestSubscribers = require('@/models/test_subscribers.ts');
+import { initTestSubscribers, TestSubscribers } from './models/test_subscribers';
 
-class Database {
-  public sequelize: Sequelize | undefined;
-  public testSubscribers: Sequelize | undefined;
-  
+export default class Database {
+  public sequelize: Sequelize = new Sequelize({
+    database: config.db_name,
+    username: config.db_user,
+    host: config.db_host,
+    password: config.db_password,
+    dialect: config.db_dialect
+  });
+
+  public testSubscribers = TestSubscribers;
+
   constructor() {
     this.connectToDatabase();
-    this.testSubscribers =  TestSubscribers( this.sequelize);
+    initTestSubscribers(this.sequelize);
   }
 
   private async connectToDatabase() {
-    this.sequelize = new Sequelize({
-      host: config.db_host,
-      username: config.db_user,
-      password: config.db_password,
-      database: config.db_name,
-      dialect: config.db_dialect
-    });
-
-    
-    await this.sequelize
-    .authenticate()
-    .then(() => {
-      console.log('Connection established.');
-    })
-    .catch((err) => {
-      console.error(`Connection failed: ${err}`);
-    });
+    await this.sequelize!.authenticate()
+      .then(() => {
+        console.log('Connection established.');
+      })
+      .catch((err) => {
+        console.error(`Connection failed: ${err}`);
+      });
   }
-
 }
-
-module.exports = Database;
