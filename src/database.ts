@@ -1,14 +1,17 @@
-import config from '@/config.ts';
-import { Sequelize } from 'sequelize';
-import { initTestSubscribers, TestSubscribers } from './models/test_subscribers';
+import config from "@/config.ts";
+import { Sequelize } from "sequelize";
+import {
+  initTestSubscribers,
+  TestSubscribers,
+} from "./models/test_subscribers";
 
-export default class Database {
+class Database {
   public sequelize: Sequelize = new Sequelize({
     database: config.db_name,
     username: config.db_user,
     host: config.db_host,
     password: config.db_password,
-    dialect: config.db_dialect
+    dialect: config.db_dialect,
   });
 
   public testSubscribers = TestSubscribers;
@@ -21,10 +24,13 @@ export default class Database {
   private async connectToDatabase() {
     await this.sequelize!.authenticate()
       .then(() => {
-        console.log('Connection established.');
+        console.log("Connection established.");
       })
       .catch((err) => {
         console.error(`Connection failed: ${err}`);
       });
   }
 }
+
+const db = new Database();
+export default db;
