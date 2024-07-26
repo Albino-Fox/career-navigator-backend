@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
-    "start": "npx tsx app.ts"
+    "start": "npx tsx app.ts",
+    "nodemon": "nodemon --watch 'src/**, app.ts' --ext 'ts,json' --exec 'npx tsx app.ts'"
   },
   "author": "albino-fox",
   "license": "ISC",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.10",
+    "nodemon": "^3.1.4",
     "typescript": "^5.5.3"
   }
 }
