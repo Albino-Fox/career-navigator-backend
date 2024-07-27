@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
 export class Vacancies extends Model {
-  public id!: number;
+  declare id: number;
   public employer_id!: number;
   public name!: string;
   public description!: string;

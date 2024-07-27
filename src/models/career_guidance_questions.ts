@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
 export class CareerGuidanceQuestions extends Model {
-  public id!: number;
+  declare id: number;
   public name!: string;
   public description!: string;
 }

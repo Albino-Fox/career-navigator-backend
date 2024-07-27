@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
 export class Roles extends Model {
-  public id!: number;
+  declare id: number;
   public name!: string;
 }
 
