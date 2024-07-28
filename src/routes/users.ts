@@ -6,7 +6,7 @@ import { stringifyJSON } from "../utils.ts";
 const router = express.Router();
 
 router.get("/get", async (req: Request, res: Response) => {
-  await db.testSubscribers
+  await db.users
     .findAll()
     .then((data) => {
       res.json(data);
@@ -18,7 +18,7 @@ router.get("/get", async (req: Request, res: Response) => {
 });
 
 router.get("/get/:id", async (req: Request, res: Response) => {
-  await db.testSubscribers
+  await db.users
     .findByPk(req.params.id)
     .then((data) => {
       res.json(data);
@@ -31,10 +31,11 @@ router.get("/get/:id", async (req: Request, res: Response) => {
 
 router.post("/post", async (req: Request, res: Response) => {
   console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
-  await db.testSubscribers
+  await db.users
     .create({
-      username: req.body.username,
-      subscription_date: new Date(Date.now()).toString(),
+      // TODO: Add proper fields
+      // username: req.body.username,
+      // subscription_date: new Date(Date.now()).toString(),
     })
     .then((record) => {
       res.send(`${record.id} was created`);
@@ -48,7 +49,7 @@ router.post("/post", async (req: Request, res: Response) => {
 
 router.patch("/patch", async (req: Request, res: Response) => {
   console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
-  await db.testSubscribers
+  await db.users
     .update(
       { [req.body.key]: req.body.value },
       {
@@ -73,7 +74,7 @@ router.patch("/patch", async (req: Request, res: Response) => {
 
 router.delete("/delete", async (req: Request, res: Response) => {
   console.log(`Recieved DELETE request: ${stringifyJSON(req.body)}`);
-  await db.testSubscribers
+  await db.users
     .destroy({
       where: {
         id: req.body.id,
