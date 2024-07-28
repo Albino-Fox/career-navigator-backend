@@ -1,6 +1,7 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
 export class CompetencyStatuses extends Model {
+  declare id: number;
   public competency_id!: number;
   public user_id!: number;
   public status!: boolean;

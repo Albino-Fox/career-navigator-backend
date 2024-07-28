@@ -71,10 +71,6 @@ class Database {
 
     initVacancies(this.sequelize);
 
-    // Causes problems by "accessing `undefined`"
-    // this.competencyStatuses.removeAttribute("id");
-    // this.examStatuses.removeAttribute("id");
-
     //associations
     this.roles.hasMany(this.users, { foreignKey: "role_id" });
     this.users.hasOne(this.roles, { foreignKey: "id" });

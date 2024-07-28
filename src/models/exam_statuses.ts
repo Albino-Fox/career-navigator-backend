@@ -1,6 +1,7 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
 export class ExamStatuses extends Model {
+  declare id: number;
   public exam_id!: number;
   public user_id!: number;
   public status!: boolean;
