@@ -71,7 +71,7 @@ class Database {
 
     initVacancies(this.sequelize);
 
-    // Causes problems with accessing `undefined`
+    // Causes problems by "accessing `undefined`"
     // this.competencyStatuses.removeAttribute("id");
     // this.examStatuses.removeAttribute("id");
 
