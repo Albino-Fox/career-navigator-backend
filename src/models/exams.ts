@@ -4,7 +4,6 @@ export class Exams extends Model {
   declare id: number;
   public name!: string;
   public description!: string;
-  public task_id!: number;
 }
 
 export const initExams = (sequelize: Sequelize): Model => {
@@ -22,10 +21,6 @@ export const initExams = (sequelize: Sequelize): Model => {
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
-      },
-      task_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
       },
     },
     {

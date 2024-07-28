@@ -7,7 +7,6 @@ export class Universities extends Model {
   public name!: string;
   public description!: string;
   public career_guidance_id!: number;
-  public exam_id!: number;
 }
 
 export const initUniversities = (sequelize: Sequelize): Model => {
@@ -36,10 +35,6 @@ export const initUniversities = (sequelize: Sequelize): Model => {
         allowNull: true,
       },
       career_guidance_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      exam_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
       },

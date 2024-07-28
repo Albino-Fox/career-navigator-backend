@@ -16,6 +16,7 @@ import {
 } from "./models/competency_statuses";
 import { ExamStatuses, initExamStatuses } from "./models/exam_statuses";
 import { ExamTasks, initExamTasks } from "./models/exam_tasks";
+import { Exams, initExams } from "./models/exams";
 import { initRoles, Roles } from "./models/roles";
 import { initUniversities, Universities } from "./models/unversities";
 import { initUsers, Users } from "./models/users";
@@ -40,6 +41,7 @@ class Database {
 
   public examStatuses = ExamStatuses;
   public examTasks = ExamTasks;
+  public exams = Exams;
 
   public roles = Roles;
 
@@ -60,6 +62,7 @@ class Database {
 
     initExamStatuses(this.sequelize);
     initExamTasks(this.sequelize);
+    initExams(this.sequelize);
 
     initRoles(this.sequelize);
 
@@ -67,6 +70,69 @@ class Database {
     initUsers(this.sequelize);
 
     initVacancies(this.sequelize);
+
+    // Causes problems with accessing `undefined`
+    // this.competencyStatuses.removeAttribute("id");
+    // this.examStatuses.removeAttribute("id");
+
+    //associations
+    this.roles.hasMany(this.users, { foreignKey: "role_id" });
+    this.users.hasOne(this.roles, { foreignKey: "id" });
+
+    this.competencyStatuses.hasOne(this.users, { foreignKey: "id" });
+    this.users.hasMany(this.competencyStatuses, { foreignKey: "user_id" });
+
+    this.vacancies.hasOne(this.users, { foreignKey: "id" });
+    this.users.hasMany(this.vacancies, { foreignKey: "employer_id" });
+
+    this.careerGuidance.hasMany(this.users, {
+      foreignKey: "career_guidance_id",
+    });
+    this.users.hasMany(this.careerGuidance, { foreignKey: "id" });
+
+    this.examStatuses.hasOne(this.users, { foreignKey: "id" });
+    this.users.hasMany(this.examStatuses, { foreignKey: "user_id" });
+
+    // TODO: Rework this relationship?
+    this.universities.hasMany(this.careerGuidance, { foreignKey: "id" });
+    this.careerGuidance.hasMany(this.universities, {
+      foreignKey: "career_guidance_id",
+    });
+
+    this.careerGuidance.hasOne(this.vacancies, {
+      foreignKey: "career_guidance_id",
+    });
+    this.vacancies.hasOne(this.careerGuidance, { foreignKey: "id" });
+
+    // TODO: Check if works
+    this.universities.hasMany(this.exams, { foreignKey: "id" });
+    this.exams.hasOne(this.universities, { foreignKey: "id" });
+
+    this.examStatuses.hasOne(this.users, { foreignKey: "id" });
+    this.users.hasMany(this.examStatuses, { foreignKey: "user_id" });
+
+    this.examStatuses.hasMany(this.exams, { foreignKey: "id" });
+    this.exams.hasOne(this.examStatuses, { foreignKey: "exam_id" });
+
+    // TODO: Check if works
+    this.exams.hasMany(this.examTasks, { foreignKey: "exam_id" });
+    this.examTasks.hasOne(this.exams, { foreignKey: "id" });
+
+    this.exams.hasMany(this.vacancies, { foreignKey: "exam_id" });
+    this.vacancies.hasOne(this.exams, { foreignKey: "id" });
+
+    // TODO: Check if works
+    this.competencies.hasOne(this.careerGuidance, {
+      foreignKey: "id",
+    });
+    this.careerGuidance.hasMany(this.competencies, {
+      foreignKey: "career_guidance_id",
+    });
+
+    this.competencies.hasOne(this.competencyStatuses, {
+      foreignKey: "competency_id",
+    });
+    this.competencyStatuses.hasMany(this.competencies, { foreignKey: "id" });
   }
 
   private async connectToDatabase() {
