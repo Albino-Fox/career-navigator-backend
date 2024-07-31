@@ -4,7 +4,10 @@ import {
   initTestSubscribers,
   TestSubscribers,
 } from "./models/test_subscribers";
-import { CareerGuidance, initCareerGuidance } from "./models/career_guidance";
+import {
+  CareerGuidances,
+  initCareerGuidances,
+} from "./models/career_guidances";
 import {
   CareerGuidanceQuestions,
   initCareerGuidanceQuestions,
@@ -33,7 +36,7 @@ class Database {
 
   public testSubscribers = TestSubscribers;
 
-  public careerGuidance = CareerGuidance;
+  public careerGuidances = CareerGuidances;
   public careerGuidanceQuestions = CareerGuidanceQuestions;
 
   public competencies = Comptenecies;
@@ -54,7 +57,7 @@ class Database {
     this.connectToDatabase();
     initTestSubscribers(this.sequelize);
 
-    initCareerGuidance(this.sequelize);
+    initCareerGuidances(this.sequelize);
     initCareerGuidanceQuestions(this.sequelize);
 
     initCompetencies(this.sequelize);
@@ -82,24 +85,24 @@ class Database {
     this.vacancies.hasOne(this.users, { foreignKey: "id" });
     this.users.hasMany(this.vacancies, { foreignKey: "employer_id" });
 
-    this.careerGuidance.hasMany(this.users, {
+    this.careerGuidances.hasMany(this.users, {
       foreignKey: "career_guidance_id",
     });
-    this.users.hasMany(this.careerGuidance, { foreignKey: "id" });
+    this.users.hasMany(this.careerGuidances, { foreignKey: "id" });
 
     this.examStatuses.hasOne(this.users, { foreignKey: "id" });
     this.users.hasMany(this.examStatuses, { foreignKey: "user_id" });
 
     // TODO: Rework this relationship?
-    this.universities.hasMany(this.careerGuidance, { foreignKey: "id" });
-    this.careerGuidance.hasMany(this.universities, {
+    this.universities.hasMany(this.careerGuidances, { foreignKey: "id" });
+    this.careerGuidances.hasMany(this.universities, {
       foreignKey: "career_guidance_id",
     });
 
-    this.careerGuidance.hasOne(this.vacancies, {
+    this.careerGuidances.hasOne(this.vacancies, {
       foreignKey: "career_guidance_id",
     });
-    this.vacancies.hasOne(this.careerGuidance, { foreignKey: "id" });
+    this.vacancies.hasOne(this.careerGuidances, { foreignKey: "id" });
 
     this.universities.hasMany(this.exams, { foreignKey: "id" });
     this.exams.hasOne(this.universities, { foreignKey: "id" });
@@ -116,10 +119,10 @@ class Database {
     this.exams.hasMany(this.vacancies, { foreignKey: "exam_id" });
     this.vacancies.hasOne(this.exams, { foreignKey: "id" });
 
-    this.competencies.hasOne(this.careerGuidance, {
+    this.competencies.hasOne(this.careerGuidances, {
       foreignKey: "id",
     });
-    this.careerGuidance.hasMany(this.competencies, {
+    this.careerGuidances.hasMany(this.competencies, {
       foreignKey: "career_guidance_id",
     });
 

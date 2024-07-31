@@ -1,12 +1,12 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class CareerGuidance extends Model {
+export class CareerGuidances extends Model {
   declare id: number;
   public name!: string;
 }
 
-export const initCareerGuidance = (sequelize: Sequelize): Model => {
-  CareerGuidance.init(
+export const initCareerGuidances = (sequelize: Sequelize): Model => {
+  CareerGuidances.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -22,8 +22,8 @@ export const initCareerGuidance = (sequelize: Sequelize): Model => {
     {
       sequelize,
       timestamps: false,
-      tableName: "career_guidance",
+      tableName: "career_guidances",
     },
   );
-  return new CareerGuidance();
+  return new CareerGuidances();
 };
