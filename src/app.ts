@@ -4,9 +4,9 @@ import { Request, Response } from "express";
 import bodyParser from "body-parser";
 import bodyParserErrorHandler from "express-body-parser-error-handler";
 
-import db from "./database.ts";
-import config from "./config/config.ts";
-import routes from "./routes/index.ts";
+import db from "@/database.ts";
+import config from "@/config/config.ts";
+import routes from "@/routes/index.ts";
 
 async function main() {
   let app = express();

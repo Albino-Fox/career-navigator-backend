@@ -1,6 +1,6 @@
 import express from "express";
 
-import careerGuidancesController from "@/controllers/career_guidances";
+import { careerGuidancesController } from "@/controllers/career_guidances";
 
 const router = express.Router();
 

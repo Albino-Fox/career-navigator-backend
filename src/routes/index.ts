@@ -1,17 +1,17 @@
 import express from "express";
 
-import testSubscribersRouter from "../routes/test_subscribers.ts";
-import usersRouter from "../routes/users.ts";
-import careerGuidanceQuestionsRouter from "../routes/career_guidance_questions.ts";
-import rolesRouter from "../routes/roles.ts";
+import testSubscribersRouter from "@/routes/test_subscribers.ts";
+import usersRouter from "@/routes/users.ts";
+import careerGuidanceQuestionsRouter from "@/routes/career_guidance_questions.ts";
+import rolesRouter from "@/routes/roles.ts";
 import careerGuidancesRouter from "./career_guidances.ts";
-import competencyStatusesRouter from "../routes/competency_statuses.ts";
-import competenciesRouter from "../routes/competencies.ts";
-import vacanciesRouter from "../routes/vacancies.ts";
-import universitiesRouter from "../routes/universities.ts";
-import examStatusesRouter from "../routes/exam_statuses.ts";
-import examsRouter from "../routes/exams.ts";
-import examTasksRouter from "../routes/exam_tasks.ts";
+import competencyStatusesRouter from "@/routes/competency_statuses.ts";
+import competenciesRouter from "@/routes/competencies.ts";
+import vacanciesRouter from "@/routes/vacancies.ts";
+import universitiesRouter from "@/routes/universities.ts";
+import examStatusesRouter from "@/routes/exam_statuses.ts";
+import examsRouter from "@/routes/exams.ts";
+import examTasksRouter from "@/routes/exam_tasks.ts";
 
 const router = express.Router();
 

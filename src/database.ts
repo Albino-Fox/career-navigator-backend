@@ -1,29 +1,29 @@
-import config from "./config/config.ts";
+import config from "@/config/config.ts";
 import { Sequelize } from "sequelize";
 import {
   initTestSubscribers,
   TestSubscribers,
-} from "./models/test_subscribers";
+} from "@/models/test_subscribers";
 import {
   CareerGuidances,
   initCareerGuidances,
-} from "./models/career_guidances";
+} from "@/models/career_guidances";
 import {
   CareerGuidanceQuestions,
   initCareerGuidanceQuestions,
-} from "./models/career_guidance_questions";
-import { Comptenecies, initCompetencies } from "./models/competencies";
+} from "@/models/career_guidance_questions";
+import { Comptenecies, initCompetencies } from "@/models/competencies";
 import {
   CompetencyStatuses,
   initCompetencyStatuses,
-} from "./models/competency_statuses";
-import { ExamStatuses, initExamStatuses } from "./models/exam_statuses";
-import { ExamTasks, initExamTasks } from "./models/exam_tasks";
-import { Exams, initExams } from "./models/exams";
-import { initRoles, Roles } from "./models/roles";
-import { initUniversities, Universities } from "./models/unversities";
-import { initUsers, Users } from "./models/users";
-import { initVacancies, Vacancies } from "./models/vacancies";
+} from "@/models/competency_statuses";
+import { ExamStatuses, initExamStatuses } from "@/models/exam_statuses";
+import { ExamTasks, initExamTasks } from "@/models/exam_tasks";
+import { Exams, initExams } from "@/models/exams";
+import { initRoles, Roles } from "@/models/roles";
+import { initUniversities, Universities } from "@/models/unversities";
+import { initUsers, Users } from "@/models/users";
+import { initVacancies, Vacancies } from "@/models/vacancies";
 
 class Database {
   public sequelize: Sequelize = new Sequelize({

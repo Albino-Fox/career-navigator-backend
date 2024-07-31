@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
 
-class CareerGuidancesController {
-  getAllCareerGuidances = async (req: Request, res: Response) => {
-    await db.careerGuidances
+class TestSubscribersController {
+  getAllTestSubscribers = async (req: Request, res: Response) => {
+    await db.testSubscribers
       .findAll()
       .then((data) => {
         res.json(data);
@@ -15,8 +15,8 @@ class CareerGuidancesController {
       });
   };
 
-  getCareerGuidance = async (req: Request, res: Response) => {
-    await db.careerGuidances
+  getTestSubscriber = async (req: Request, res: Response) => {
+    await db.testSubscribers
       .findByPk(req.params.id)
       .then((data) => {
         res.json(data);
@@ -27,17 +27,16 @@ class CareerGuidancesController {
       });
   };
 
-  createCareerGuidance = async (req: Request, res: Response) => {
+  createTestSubscriber = async (req: Request, res: Response) => {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
-    await db.careerGuidances
+    await db.testSubscribers
       .create({
-        // TODO: Add proper fields
-        // username: req.body.username,
-        // subscription_date: new Date(Date.now()).toString(),
+        username: req.body.username,
+        subscription_date: new Date(Date.now()).toString(),
       })
       .then((record) => {
         res.send(`${record.id} was created`);
-        console.log(`Career guidance ${record.id} created`);
+        console.log(`TestSubscriber ${record.id} created`);
       })
       .catch((err) => {
         res.send(`Something went wrong...`);
@@ -45,9 +44,9 @@ class CareerGuidancesController {
       });
   };
 
-  updateCareerGuidance = async (req: Request, res: Response) => {
+  updateTestSubscriber = async (req: Request, res: Response) => {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
-    await db.careerGuidances
+    await db.testSubscribers
       .update(
         { [req.body.key]: req.body.value },
         {
@@ -70,9 +69,9 @@ class CareerGuidancesController {
       });
   };
 
-  deleteCareerGuidance = async (req: Request, res: Response) => {
+  deleteTestSubscriber = async (req: Request, res: Response) => {
     console.log(`Recieved DELETE request: ${stringifyJSON(req.body)}`);
-    await db.careerGuidances
+    await db.testSubscribers
       .destroy({
         where: {
           id: req.body.id,
@@ -92,4 +91,4 @@ class CareerGuidancesController {
   };
 }
 
-export const careerGuidancesController = new CareerGuidancesController();
+export const testSubscribersController = new TestSubscribersController();
