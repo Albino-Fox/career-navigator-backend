@@ -1,4 +1,4 @@
-import config from "@/config.ts";
+import config from "./config/config.ts";
 import { Sequelize } from "sequelize";
 import {
   initTestSubscribers,
@@ -72,6 +72,7 @@ class Database {
     initVacancies(this.sequelize);
 
     //associations
+    // WARNING: Untested
     this.roles.hasMany(this.users, { foreignKey: "role_id" });
     this.users.hasOne(this.roles, { foreignKey: "id" });
 
@@ -100,7 +101,6 @@ class Database {
     });
     this.vacancies.hasOne(this.careerGuidance, { foreignKey: "id" });
 
-    // TODO: Check if works
     this.universities.hasMany(this.exams, { foreignKey: "id" });
     this.exams.hasOne(this.universities, { foreignKey: "id" });
 
@@ -110,14 +110,12 @@ class Database {
     this.examStatuses.hasMany(this.exams, { foreignKey: "id" });
     this.exams.hasOne(this.examStatuses, { foreignKey: "exam_id" });
 
-    // TODO: Check if works
     this.exams.hasMany(this.examTasks, { foreignKey: "exam_id" });
     this.examTasks.hasOne(this.exams, { foreignKey: "id" });
 
     this.exams.hasMany(this.vacancies, { foreignKey: "exam_id" });
     this.vacancies.hasOne(this.exams, { foreignKey: "id" });
 
-    // TODO: Check if works
     this.competencies.hasOne(this.careerGuidance, {
       foreignKey: "id",
     });

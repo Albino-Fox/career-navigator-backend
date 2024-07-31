@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
-    "start": "npx tsx app.ts",
-    "nodemon": "nodemon --watch 'src/**, app.ts' --ext 'ts,json' --exec 'npx tsx app.ts'"
+    "start": "npx tsx src/app.ts",
+    "nodemon": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'npx tsx src/app.ts'"
   },
   "author": "albino-fox",
   "license": "ISC",
