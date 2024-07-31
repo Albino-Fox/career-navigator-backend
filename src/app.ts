@@ -20,13 +20,14 @@ async function main() {
     }),
   );
 
+  // WARNING: Further logic must be provided in the API
+  app.use("/api", routes);
+
   app.listen(config.port, config.host, () => {
     console.log(`Running on ${config.host} with port ${config.port}`);
   });
 
   await db.sequelize!.sync();
-  // WARNING: Further logic must be provided in the API
-  app.use("/api", routes);
 }
 
 main();
