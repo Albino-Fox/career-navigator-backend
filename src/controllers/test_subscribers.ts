@@ -2,17 +2,18 @@ import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
 
+import { testSubscribersService } from "@/services/test_subscribers";
+
 class TestSubscribersController {
   getAllTestSubscribers = async (req: Request, res: Response) => {
-    await db.testSubscribers
-      .findAll()
-      .then((data) => {
-        res.json(data);
-      })
-      .catch((err) => {
-        res.send(`Something went wrong...`);
-        console.error(err.original?.sqlMessage);
-      });
+    let data = await testSubscribersService.getAllTestSubscribers();
+
+    if (data instanceof Error) {
+      res.send(`Something went wrong...`);
+      console.error(data);
+    } else {
+      res.json(data);
+    }
   };
 
   getTestSubscriber = async (req: Request, res: Response) => {
