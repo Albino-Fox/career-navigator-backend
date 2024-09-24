@@ -4,13 +4,13 @@ import { vacanciesController } from "@/controllers/vacancies";
 
 const router = express.Router();
 
-router.get("/get", vacanciesController.getAllVacancies);
-router.get("/get/:id", vacanciesController.getVacancy);
+router.get("/get", vacanciesController.getAll);
+router.get("/get/:id", vacanciesController.get);
 
-router.post("/post", vacanciesController.createVacancy);
+router.post("/post", vacanciesController.create);
 
-router.patch("/patch", vacanciesController.updateVacancy);
+router.patch("/patch", vacanciesController.update);
 
-router.delete("/delete", vacanciesController.deleteVacancy);
+router.delete("/delete", vacanciesController.delete);
 
 export default router;
