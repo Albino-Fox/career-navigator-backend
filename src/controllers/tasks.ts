@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
 
-class UniversitiesController {
-  getAllUniversities = async (req: Request, res: Response) => {
-    await db.universities
+class TasksController {
+  getAllCompetencies = async (req: Request, res: Response) => {
+    await db.tasks
       .findAll()
       .then((data) => {
         res.json(data);
@@ -15,8 +15,8 @@ class UniversitiesController {
       });
   };
 
-  getUniversity = async (req: Request, res: Response) => {
-    await db.universities
+  getCompetency = async (req: Request, res: Response) => {
+    await db.tasks
       .findByPk(req.params.id)
       .then((data) => {
         res.json(data);
@@ -27,9 +27,9 @@ class UniversitiesController {
       });
   };
 
-  createUniversity = async (req: Request, res: Response) => {
+  createCompetency = async (req: Request, res: Response) => {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
-    await db.universities
+    await db.tasks
       .create({
         // TODO: Add proper fields
         // username: req.body.username,
@@ -37,7 +37,7 @@ class UniversitiesController {
       })
       .then((record) => {
         res.send(`${record.id} was created`);
-        console.log(`University ${record.id} created`);
+        console.log(`Competency ${record.id} created`);
       })
       .catch((err) => {
         res.send(`Something went wrong...`);
@@ -45,9 +45,9 @@ class UniversitiesController {
       });
   };
 
-  updateUniversity = async (req: Request, res: Response) => {
+  updateCompetency = async (req: Request, res: Response) => {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
-    await db.universities
+    await db.tasks
       .update(
         { [req.body.key]: req.body.value },
         {
@@ -70,9 +70,9 @@ class UniversitiesController {
       });
   };
 
-  deleteUniversity = async (req: Request, res: Response) => {
+  deleteCompetency = async (req: Request, res: Response) => {
     console.log(`Recieved DELETE request: ${stringifyJSON(req.body)}`);
-    await db.universities
+    await db.tasks
       .destroy({
         where: {
           id: req.body.id,
@@ -92,4 +92,4 @@ class UniversitiesController {
   };
 }
 
-export const universitiesController = new UniversitiesController();
+export const tasksController = new TasksController();

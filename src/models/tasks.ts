@@ -1,14 +1,15 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Comptenecies extends Model {
+export class Tasks extends Model {
   declare id: number;
   public name!: string;
   public description!: string;
+  public level!: number;
   public career_guidance_id!: number;
 }
 
-export const initCompetencies = (sequelize: Sequelize): Model => {
-  Comptenecies.init(
+export const initTasks = (sequelize: Sequelize): Model => {
+  Tasks.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -23,7 +24,11 @@ export const initCompetencies = (sequelize: Sequelize): Model => {
         type: DataTypes.STRING(9999),
         allowNull: true,
       },
-      career_guidance_id: {
+      level: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      career_guidance_branch_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -31,8 +36,8 @@ export const initCompetencies = (sequelize: Sequelize): Model => {
     {
       sequelize,
       timestamps: false,
-      tableName: "comptenecies",
+      tableName: "tasks",
     },
   );
-  return new Comptenecies();
+  return new Tasks();
 };

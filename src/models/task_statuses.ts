@@ -1,16 +1,15 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class CompetencyStatuses extends Model {
+export class TaskStatuses extends Model {
   declare id: number;
-  public competency_id!: number;
   public user_id!: number;
   public status!: boolean;
 }
 
-export const initCompetencyStatuses = (sequelize: Sequelize): Model => {
-  CompetencyStatuses.init(
+export const initTaskStatuses = (sequelize: Sequelize): Model => {
+  TaskStatuses.init(
     {
-      competency_id: {
+      task_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -27,8 +26,8 @@ export const initCompetencyStatuses = (sequelize: Sequelize): Model => {
     {
       sequelize,
       timestamps: false,
-      tableName: "comptenecy_statuses",
+      tableName: "task_statuses",
     },
   );
-  return new CompetencyStatuses();
+  return new TaskStatuses();
 };

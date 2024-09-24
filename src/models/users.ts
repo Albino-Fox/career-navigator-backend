@@ -5,13 +5,13 @@ export class Users extends Model {
   public name!: string;
   public surname!: string;
   public patronymic!: string;
-  public birth_date!: Date;
   public phone_number!: string;
-  public login!: string;
+  public focus_vacancy_id!: number;
+  public is_completing!: boolean;
   public email!: string;
   public password!: string;
+  public description!: string;
   public role_id!: number;
-  public career_guidance_id!: number;
 }
 
 export const initUsers = (sequelize: Sequelize): Model => {
@@ -34,17 +34,17 @@ export const initUsers = (sequelize: Sequelize): Model => {
         type: DataTypes.STRING(255),
         allowNull: true,
       },
-      birth_date: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
       phone_number: {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      login: {
-        type: DataTypes.STRING(255),
-        unique: true,
+      focus_vacancy_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      is_completing: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
       },
       email: {
         type: DataTypes.STRING(255),
@@ -54,13 +54,13 @@ export const initUsers = (sequelize: Sequelize): Model => {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
+      description: {
+        type: DataTypes.STRING(9999),
+        allowNull: true,
+      },
       role_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      career_guidance_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
       },
     },
     {

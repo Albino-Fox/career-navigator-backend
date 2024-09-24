@@ -6,7 +6,9 @@ export class Vacancies extends Model {
   public name!: string;
   public description!: string;
   public career_guidance_id!: number;
-  public exam_id!: number;
+  public is_taken!: boolean;
+  public user_id!: number;
+  public level!: number;
 }
 
 export const initVacancies = (sequelize: Sequelize): Model => {
@@ -33,7 +35,15 @@ export const initVacancies = (sequelize: Sequelize): Model => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      exam_id: {
+      is_taken: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      level: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

@@ -1,16 +1,16 @@
 import express from "express";
 
-import { competenciesController } from "@/controllers/competencies";
+import { tasksController } from "@/controllers/tasks";
 
 const router = express.Router();
 
-router.get("/get", competenciesController.getAllCompetencies);
-router.get("/get/:id", competenciesController.getCompetency);
+router.get("/get", tasksController.getAllCompetencies);
+router.get("/get/:id", tasksController.getCompetency);
 
-router.post("/post", competenciesController.createCompetency);
+router.post("/post", tasksController.createCompetency);
 
-router.patch("/patch", competenciesController.updateCompetency);
+router.patch("/patch", tasksController.updateCompetency);
 
-router.delete("/delete", competenciesController.deleteCompetency);
+router.delete("/delete", tasksController.deleteCompetency);
 
 export default router;

@@ -1,24 +1,24 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class ExamTasks extends Model {
+export class Applications extends Model {
   declare id: number;
-  public name!: string;
-  public exam_id!: number;
+  public user_id!: number;
+  public vacancy_id!: number;
 }
 
-export const initExamTasks = (sequelize: Sequelize): Model => {
-  ExamTasks.init(
+export const initApplications = (sequelize: Sequelize): Model => {
+  Applications.init(
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      name: {
-        type: DataTypes.STRING(255),
+      user_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
-      exam_id: {
+      vacancy_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -26,8 +26,8 @@ export const initExamTasks = (sequelize: Sequelize): Model => {
     {
       sequelize,
       timestamps: false,
-      tableName: "exam_tasks",
+      tableName: "applications",
     },
   );
-  return new ExamTasks();
+  return new Applications();
 };
