@@ -69,33 +69,61 @@ class Database {
 
     //associations
     // WARNING: Untested
-    this.roles.hasMany(this.users, { foreignKey: "role_id" });
-    this.users.hasOne(this.roles, { foreignKey: "id" });
 
-    this.vacancies.hasOne(this.users, { foreignKey: "id" });
+    this.users.hasMany(this.applications, { foreignKey: "user_id" });
+    this.applications.belongsTo(this.users, { foreignKey: "user_id" });
+
+    this.vacancies.hasMany(this.applications, { foreignKey: "vacancy_id" });
+    this.applications.belongsTo(this.vacancies, { foreignKey: "vacancy_id" });
+
+    this.vacancies.hasOne(this.users, { foreignKey: "focus" });
+    this.users.belongsTo(this.vacancies, { foreignKey: "focus" });
+
     this.users.hasMany(this.vacancies, { foreignKey: "employer_id" });
+    this.vacancies.belongsTo(this.users, { foreignKey: "employer_id" });
 
-    this.careerGuidances.hasMany(this.users, {
+    this.roles.hasMany(this.users, { foreignKey: "role_id" });
+    this.users.belongsTo(this.roles, { foreignKey: "role_id" });
+
+    this.users.hasMany(this.taskStatuses, { foreignKey: "user_id" });
+    this.taskStatuses.belongsTo(this.users, { foreignKey: "user_id" });
+
+    this.careerGuidances.hasMany(this.vacancies, {
       foreignKey: "career_guidance_id",
     });
-    this.users.hasMany(this.careerGuidances, { foreignKey: "id" });
-
-    this.careerGuidances.hasOne(this.vacancies, {
-      foreignKey: "career_guidance_id",
-    });
-    this.vacancies.hasOne(this.careerGuidances, { foreignKey: "id" });
-
-    this.tasks.hasOne(this.careerGuidances, {
-      foreignKey: "id",
-    });
-    this.careerGuidances.hasMany(this.tasks, {
+    this.vacancies.belongsTo(this.careerGuidances, {
       foreignKey: "career_guidance_id",
     });
 
-    this.tasks.hasOne(this.taskStatuses, {
-      foreignKey: "competency_id",
+    this.careerGuidances.hasMany(this.careerGuidanceBranches, {
+      foreignKey: "career_guidance_id",
     });
-    this.taskStatuses.hasMany(this.tasks, { foreignKey: "id" });
+    this.careerGuidanceBranches.belongsTo(this.careerGuidances, {
+      foreignKey: "career_guidance_id",
+    });
+
+    this.users.hasMany(this.careerGuidanceBranches, {
+      foreignKey: "university_id",
+    });
+    this.careerGuidanceBranches.belongsTo(this.users, {
+      foreignKey: "university_id",
+    });
+
+    this.users.hasMany(this.answers, { foreignKey: "user_id" });
+    this.answers.belongsTo(this.users, { foreignKey: "user_id" });
+
+    this.tasks.hasMany(this.taskStatuses, { foreignKey: "task_id" });
+    this.taskStatuses.belongsTo(this.tasks, { foreignKey: "task_id" });
+
+    this.tasks.hasMany(this.answers, { foreignKey: "task_id" });
+    this.answers.belongsTo(this.tasks, { foreignKey: "task_id" });
+
+    this.careerGuidanceBranches.hasMany(this.tasks, {
+      foreignKey: "career_guidance_id",
+    });
+    this.careerGuidances.belongsTo(this.careerGuidanceBranches, {
+      foreignKey: "career_guidance_id",
+    });
   }
 
   private async connectToDatabase() {
