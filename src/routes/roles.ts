@@ -4,13 +4,13 @@ import { rolesController } from "@/controllers/roles";
 
 const router = express.Router();
 
-router.get("/get", rolesController.getAllRoles);
-router.get("/get/:id", rolesController.getRole);
+router.get("/get", rolesController.getAll);
+router.get("/get/:id", rolesController.get);
 
-router.post("/post", rolesController.createRole);
+router.post("/post", rolesController.create);
 
-router.patch("/patch", rolesController.updateRole);
+router.patch("/patch", rolesController.update);
 
-router.delete("/delete", rolesController.deleteRole);
+router.delete("/delete", rolesController.delete);
 
 export default router;

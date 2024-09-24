@@ -3,7 +3,7 @@ import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
 
 class TaskStatusesController {
-  getAllCompetencyStatuses = async (req: Request, res: Response) => {
+  getAll = async (req: Request, res: Response) => {
     await db.taskStatuses
       .findAll()
       .then((data) => {
@@ -15,7 +15,7 @@ class TaskStatusesController {
       });
   };
 
-  getCompetencyStatus = async (req: Request, res: Response) => {
+  get = async (req: Request, res: Response) => {
     await db.taskStatuses
       .findByPk(req.params.id)
       .then((data) => {
@@ -27,7 +27,7 @@ class TaskStatusesController {
       });
   };
 
-  createCompetencyStatus = async (req: Request, res: Response) => {
+  create = async (req: Request, res: Response) => {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
     await db.taskStatuses
       .create({
@@ -37,7 +37,7 @@ class TaskStatusesController {
       })
       .then((record) => {
         res.send(`${record.id} was created`);
-        console.log(`Competency status ${record.id} created`);
+        console.log(`Task status ${record.id} created`);
       })
       .catch((err) => {
         res.send(`Something went wrong...`);
@@ -45,7 +45,7 @@ class TaskStatusesController {
       });
   };
 
-  updateCompetencyStatus = async (req: Request, res: Response) => {
+  update = async (req: Request, res: Response) => {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
     await db.taskStatuses
       .update(
@@ -70,7 +70,7 @@ class TaskStatusesController {
       });
   };
 
-  deleteCompetencyStatus = async (req: Request, res: Response) => {
+  delete = async (req: Request, res: Response) => {
     console.log(`Recieved DELETE request: ${stringifyJSON(req.body)}`);
     await db.taskStatuses
       .destroy({

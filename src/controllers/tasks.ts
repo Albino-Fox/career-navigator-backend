@@ -15,7 +15,7 @@ class TasksController {
       });
   };
 
-  getCompetency = async (req: Request, res: Response) => {
+  get = async (req: Request, res: Response) => {
     await db.tasks
       .findByPk(req.params.id)
       .then((data) => {
@@ -27,7 +27,7 @@ class TasksController {
       });
   };
 
-  createCompetency = async (req: Request, res: Response) => {
+  create = async (req: Request, res: Response) => {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
     await db.tasks
       .create({
@@ -37,7 +37,7 @@ class TasksController {
       })
       .then((record) => {
         res.send(`${record.id} was created`);
-        console.log(`Competency ${record.id} created`);
+        console.log(`Task ${record.id} created`);
       })
       .catch((err) => {
         res.send(`Something went wrong...`);
@@ -45,7 +45,7 @@ class TasksController {
       });
   };
 
-  updateCompetency = async (req: Request, res: Response) => {
+  update = async (req: Request, res: Response) => {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
     await db.tasks
       .update(
@@ -70,7 +70,7 @@ class TasksController {
       });
   };
 
-  deleteCompetency = async (req: Request, res: Response) => {
+  delete = async (req: Request, res: Response) => {
     console.log(`Recieved DELETE request: ${stringifyJSON(req.body)}`);
     await db.tasks
       .destroy({

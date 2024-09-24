@@ -3,7 +3,7 @@ import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
 
 class ApplicationsController {
-  getAllCareerGuidances = async (req: Request, res: Response) => {
+  getAll = async (req: Request, res: Response) => {
     await db.applications
       .findAll()
       .then((data) => {
@@ -15,7 +15,7 @@ class ApplicationsController {
       });
   };
 
-  getCareerGuidance = async (req: Request, res: Response) => {
+  get = async (req: Request, res: Response) => {
     await db.applications
       .findByPk(req.params.id)
       .then((data) => {
@@ -27,7 +27,7 @@ class ApplicationsController {
       });
   };
 
-  createCareerGuidance = async (req: Request, res: Response) => {
+  create = async (req: Request, res: Response) => {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
     await db.applications
       .create({
@@ -45,7 +45,7 @@ class ApplicationsController {
       });
   };
 
-  updateCareerGuidance = async (req: Request, res: Response) => {
+  update = async (req: Request, res: Response) => {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
     await db.applications
       .update(
@@ -70,7 +70,7 @@ class ApplicationsController {
       });
   };
 
-  deleteCareerGuidance = async (req: Request, res: Response) => {
+  delete = async (req: Request, res: Response) => {
     console.log(`Recieved DELETE request: ${stringifyJSON(req.body)}`);
     await db.applications
       .destroy({
