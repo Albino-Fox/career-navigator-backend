@@ -42,12 +42,12 @@ class VacanciesController {
             id: item.id,
             title: item.name,
             skillTitle: item["CareerGuidance"]!.name,
+            skillId: item.career_guidance_id,
             level: item.level,
             description: item.description,
             is_taken: item.is_taken,
           };
         });
-        console.log(joinedData);
         res.json(joinedData);
       })
       .catch((err) => {
@@ -93,19 +93,22 @@ class VacanciesController {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
     await db.vacancies
       .update(
-        { [req.body.key]: req.body.value },
         {
-          where: { id: req.body.id },
+          name: req.body.name,
+          description: req.body.description,
+          career_guidance_id: req.body.career_guidance_id,
+          level: req.body.level,
+        },
+        {
+          where: { id: req.params.id, employer_id: req.body.employer_id },
         },
       )
       .then((result) => {
         if (result[0] === 1) {
           // one by one
-          res.send(
-            `${req.body.key} of ${req.body.id} has been changed to ${req.body.value}`,
-          );
+          res.send(`Vacancy ${req.params.id} was updated`);
         } else {
-          res.send(`${req.body.key} of ${req.body.id} was not updated...`);
+          res.send(`Vacancy ${req.params.id} was not updated...`);
         }
       })
       .catch((err) => {
