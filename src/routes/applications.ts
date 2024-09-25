@@ -9,7 +9,7 @@ router.get("/get/:id", applicationsController.get);
 
 router.post("/create", applicationsController.create);
 
-router.patch("/patch", applicationsController.update);
+router.patch("/update", applicationsController.update);
 
 router.delete("/delete", applicationsController.delete);
 

@@ -9,7 +9,7 @@ router.get("/get/:id", answersController.get);
 
 router.post("/create", answersController.create);
 
-router.patch("/patch", answersController.update);
+router.patch("/update", answersController.update);
 
 router.delete("/delete", answersController.delete);
 

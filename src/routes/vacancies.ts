@@ -10,7 +10,7 @@ router.get("/getFrom/:user_id", vacanciesController.getFromUser);
 
 router.post("/create", vacanciesController.create);
 
-router.patch("/patch", vacanciesController.update);
+router.patch("/update/:id", vacanciesController.update);
 
 router.delete("/delete", vacanciesController.delete);
 

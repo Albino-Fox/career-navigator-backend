@@ -9,7 +9,7 @@ router.get("/get/:id", rolesController.get);
 
 router.post("/create", rolesController.create);
 
-router.patch("/patch", rolesController.update);
+router.patch("/update", rolesController.update);
 
 router.delete("/delete", rolesController.delete);
 

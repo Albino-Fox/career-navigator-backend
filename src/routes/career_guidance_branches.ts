@@ -9,7 +9,7 @@ router.get("/get/:id", careerGuidanceBranchesController.get);
 
 router.post("/create", careerGuidanceBranchesController.create);
 
-router.patch("/patch", careerGuidanceBranchesController.update);
+router.patch("/update", careerGuidanceBranchesController.update);
 
 router.delete("/delete", careerGuidanceBranchesController.delete);
 
