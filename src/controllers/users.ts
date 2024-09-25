@@ -31,9 +31,16 @@ class UsersController {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
     await db.users
       .create({
-        // TODO: Add proper fields
-        // username: req.body.username,
-        // subscription_date: new Date(Date.now()).toString(),
+        name: req.body.name,
+        surname: req.body.surname,
+        patronymic: req.body.patronymic,
+        focus: null,
+        is_completing: false,
+        description: null,
+        phone_number: req.body.phone_number,
+        email: req.body.email,
+        password: req.body.password,
+        role_id: 1,
       })
       .then((record) => {
         res.send(`${record.id} was created`);
@@ -45,23 +52,25 @@ class UsersController {
       });
   };
 
-  update = async (req: Request, res: Response) => {
+  updateProfile = async (req: Request, res: Response) => {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
     await db.users
       .update(
-        { [req.body.key]: req.body.value },
         {
-          where: { id: req.body.id },
+          name: req.body.name,
+          surname: req.body.surname,
+          patronymic: req.body.patronymic,
+        },
+        {
+          where: { id: req.params.id },
         },
       )
       .then((result) => {
         if (result[0] === 1) {
           // one by one
-          res.send(
-            `${req.body.key} of ${req.body.id} has been changed to ${req.body.value}`,
-          );
+          res.send(`User ${req.params.id} has been updated`);
         } else {
-          res.send(`${req.body.key} of ${req.body.id} was not updated...`);
+          res.send(`User ${req.params.id} was not updated...`);
         }
       })
       .catch((err) => {

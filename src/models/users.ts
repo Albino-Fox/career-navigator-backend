@@ -48,6 +48,7 @@ export const initUsers = (sequelize: Sequelize): Model => {
       },
       email: {
         type: DataTypes.STRING(255),
+        unique: true,
         allowNull: false,
       },
       password: {

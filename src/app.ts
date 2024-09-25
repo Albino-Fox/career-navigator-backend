@@ -10,6 +10,9 @@ import routes from "@/routes/index.ts";
 
 async function main() {
   let app = express();
+  let cors = require("cors");
+  app.use(cors());
+
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(
