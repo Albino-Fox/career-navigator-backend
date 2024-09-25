@@ -68,33 +68,42 @@ class TasksController {
           console.error(err.original?.sqlMessage || err);
         });
     } else {
-      res.send(`User is not an employer`);
+      res.send(`User is not an university`);
     }
   };
 
   update = async (req: Request, res: Response) => {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
-    await db.tasks
-      .update(
-        { [req.body.key]: req.body.value },
-        {
-          where: { id: req.body.id },
-        },
-      )
-      .then((result) => {
-        if (result[0] === 1) {
-          // one by one
-          res.send(
-            `${req.body.key} of ${req.body.id} has been changed to ${req.body.value}`,
-          );
-        } else {
-          res.send(`${req.body.key} of ${req.body.id} was not updated...`);
-        }
-      })
-      .catch((err) => {
-        res.send(`Something went wrong...`);
-        console.error(err.original?.sqlMessage || err);
-      });
+    let isValid = false;
+    await db.users.findByPk(req.body.university_id).then((data) => {
+      if (data && data.role_id === Roles.university) isValid = true;
+    });
+    if (isValid) {
+      await db.tasks
+        .update(
+          {
+            name: req.body.name,
+            description: req.body.description,
+          },
+          {
+            where: { id: req.body.id },
+          },
+        )
+        .then((result) => {
+          if (result[0] === 1) {
+            // one by one
+            res.send(`Task ${req.body.id} was updated`);
+          } else {
+            res.send(`Task ${req.body.id} was not updated...`);
+          }
+        })
+        .catch((err) => {
+          res.send(`Something went wrong...`);
+          console.error(err.original?.sqlMessage || err);
+        });
+    } else {
+      res.send(`User is not an university`);
+    }
   };
 
   delete = async (req: Request, res: Response) => {
