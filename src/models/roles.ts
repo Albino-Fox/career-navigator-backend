@@ -15,7 +15,6 @@ export const initRoles = (sequelize: Sequelize): Model => {
       },
       name: {
         type: DataTypes.STRING(255),
-        unique: true,
         allowNull: false,
       },
     },
@@ -23,6 +22,7 @@ export const initRoles = (sequelize: Sequelize): Model => {
       sequelize,
       timestamps: false,
       tableName: "roles",
+      indexes: [{ unique: true, fields: ["name"] }],
     },
   );
   return new Roles();
