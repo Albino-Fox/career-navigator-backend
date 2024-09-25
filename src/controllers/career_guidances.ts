@@ -31,9 +31,7 @@ class CareerGuidancesController {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
     await db.careerGuidances
       .create({
-        // TODO: Add proper fields
-        // username: req.body.username,
-        // subscription_date: new Date(Date.now()).toString(),
+        name: req.body.name,
       })
       .then((record) => {
         res.send(`${record.id} was created`);

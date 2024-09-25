@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/get", answersController.getAll);
 router.get("/get/:id", answersController.get);
 
-router.post("/post", answersController.create);
+router.post("/create", answersController.create);
 
 router.patch("/patch", answersController.update);
 

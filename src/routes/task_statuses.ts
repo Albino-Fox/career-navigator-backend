@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/get", taskStatusesController.getAll);
 router.get("/get/:id", taskStatusesController.get);
 
-router.post("/post", taskStatusesController.create);
+router.post("/create", taskStatusesController.create);
 
 router.patch("/patch", taskStatusesController.update);
 

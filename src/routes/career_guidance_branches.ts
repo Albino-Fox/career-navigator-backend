@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/get", careerGuidanceBranchesController.getAll);
 router.get("/get/:id", careerGuidanceBranchesController.get);
 
-router.post("/post", careerGuidanceBranchesController.create);
+router.post("/create", careerGuidanceBranchesController.create);
 
 router.patch("/patch", careerGuidanceBranchesController.update);
 

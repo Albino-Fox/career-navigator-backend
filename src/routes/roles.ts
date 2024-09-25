@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/get", rolesController.getAll);
 router.get("/get/:id", rolesController.get);
 
-router.post("/post", rolesController.create);
+router.post("/create", rolesController.create);
 
 router.patch("/patch", rolesController.update);
 

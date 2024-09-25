@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/get", tasksController.getAllCompetencies);
 router.get("/get/:id", tasksController.get);
 
-router.post("/post", tasksController.create);
+router.post("/create", tasksController.create);
 
 router.patch("/patch", tasksController.update);
 
