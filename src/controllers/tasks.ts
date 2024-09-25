@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
+import { Roles } from "@/types/user";
+import { Tasks } from "@/models/tasks";
 
 class TasksController {
-  getAllCompetencies = async (req: Request, res: Response) => {
+  getAllTasks = async (req: Request, res: Response) => {
     await db.tasks
       .findAll()
       .then((data) => {
@@ -27,34 +29,47 @@ class TasksController {
       });
   };
 
+  getFromBranch = async (req: Request, res: Response) => {
+    await db.tasks
+      .findAll({
+        where: { career_guidance_branch_id: req.params.branch_id },
+      })
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage);
+      });
+  };
+
   create = async (req: Request, res: Response) => {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
-    // let isValid = false;
-    // await db.users.findByPk(req.body.employer_id).then((data) => {
-    //   if (data && data.role_id === 2) isValid = true;
-    // });
-    // if (isValid) {
-    //   await db.tasks
-    //     .create({
-    //       employer_id: req.body.employer_id,
-    //       name: req.body.title,
-    //       description: req.body.description,
-    //       career_guidance_id: req.body.career_guidance_id,
-    //       is_taken: false,
-    //       user_id: null,
-    //       level: req.body.level,
-    //     })
-    //     .then((record) => {
-    //       res.send(`Task ${record.id} was created`);
-    //       console.log(`Task ${record.id} created`);
-    //     })
-    //     .catch((err) => {
-    //       res.send(`Something went wrong...`);
-    //       console.error(err.original?.sqlMessage || err);
-    //     });
-    // } else {
-    //   res.send(`User is not an employer`);
-    // }
+    let isValid = false;
+    if (req.body.name == "") req.body.name = null;
+    if (req.body.career_guidance_branch_id == "")
+      req.body.career_guidance_branch_id = null;
+    await db.users.findByPk(req.body.university_id).then((data) => {
+      if (data && data.role_id === Roles.university) isValid = true;
+    });
+    if (isValid) {
+      await db.tasks
+        .create({
+          name: req.body.name,
+          description: req.body.description,
+          career_guidance_branch_id: req.body.career_guidance_branch_id,
+        })
+        .then((record) => {
+          res.send(`Task ${record.id} was created`);
+          console.log(`Task ${record.id} created`);
+        })
+        .catch((err) => {
+          res.send(`Something went wrong...`);
+          console.error(err.original?.sqlMessage || err);
+        });
+    } else {
+      res.send(`User is not an employer`);
+    }
   };
 
   update = async (req: Request, res: Response) => {

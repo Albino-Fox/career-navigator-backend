@@ -4,7 +4,6 @@ export class Tasks extends Model {
   declare id: number;
   public name!: string;
   public description!: string;
-  public level!: number;
   public career_guidance_id!: number;
 }
 
@@ -23,10 +22,6 @@ export const initTasks = (sequelize: Sequelize): Model => {
       description: {
         type: DataTypes.STRING(9999),
         allowNull: true,
-      },
-      level: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
       },
       career_guidance_branch_id: {
         type: DataTypes.INTEGER,
