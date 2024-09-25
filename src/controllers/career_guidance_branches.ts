@@ -19,11 +19,33 @@ class CareerGuidanceBranchesController {
   };
 
   get = async (req: Request, res: Response) => {
+    console.log(req.params.id);
     await db.careerGuidanceBranches
-      .findByPk(req.params.id)
-      .then((data) => {
-        res.json(data);
+      .findOne({
+        where: { id: req.params.id },
+        include: [{ model: CareerGuidances, attributes: ["name"] }],
       })
+      .then(
+        (
+          item:
+            | (CareerGuidanceBranches & {
+                CareerGuidance?: { name: string };
+              })
+            | null,
+        ) => {
+          if (item) {
+            let joinedData = {
+              id: item.id,
+              skillTitle: item["CareerGuidance"]!.name,
+              skillId: item.career_guidance_id,
+              level: item.level,
+            };
+            res.json(joinedData);
+          } else {
+            throw new Error("Something went wrong while fetching data");
+          }
+        },
+      )
       .catch((err) => {
         res.send(`Something went wrong...`);
         console.error(err.original?.sqlMessage);
