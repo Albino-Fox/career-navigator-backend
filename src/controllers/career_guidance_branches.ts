@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
+import { Roles } from "@/types/user";
+import { CareerGuidances } from "@/models/career_guidances";
+import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
 
 class CareerGuidanceBranchesController {
   getAll = async (req: Request, res: Response) => {
@@ -27,22 +30,61 @@ class CareerGuidanceBranchesController {
       });
   };
 
-  create = async (req: Request, res: Response) => {
-    console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
+  getFromUser = async (req: Request, res: Response) => {
     await db.careerGuidanceBranches
-      .create({
-        // TODO: Add proper fields
-        // username: req.body.username,
-        // subscription_date: new Date(Date.now()).toString(),
+      .findAll({
+        where: { university_id: req.params.user_id },
+        include: [{ model: CareerGuidances, attributes: ["name"] }],
       })
-      .then((record) => {
-        res.send(`${record.id} was created`);
-        console.log(`Career guidance ${record.id} created`);
-      })
+      .then(
+        (
+          data: (CareerGuidanceBranches & {
+            CareerGuidance?: { name: string };
+          })[],
+        ) => {
+          let joinedData = data.map((item) => {
+            return {
+              id: item.id,
+              skillTitle: item["CareerGuidance"]!.name,
+              skillId: item.career_guidance_id,
+              level: item.level,
+            };
+          });
+          res.json(joinedData);
+        },
+      )
       .catch((err) => {
         res.send(`Something went wrong...`);
-        console.error(err.original?.sqlMessage || err);
+        console.error(err.original?.sqlMessage);
       });
+  };
+
+  create = async (req: Request, res: Response) => {
+    console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
+    let isValid = false;
+    if (req.body.level == "") req.body.level = null;
+    if (req.body.career_guidance_id == "") req.body.career_guidance_id = null;
+    await db.users.findByPk(req.body.university_id).then((data) => {
+      if (data && data.role_id === Roles.university) isValid = true;
+    });
+    if (isValid) {
+      await db.careerGuidanceBranches
+        .create({
+          career_guidance_id: req.body.career_guidance_id,
+          level: req.body.level,
+          university_id: req.body.university_id,
+        })
+        .then((record) => {
+          res.send(`${record.id} was created`);
+          console.log(`Career guidance ${record.id} created`);
+        })
+        .catch((err) => {
+          res.send(`Something went wrong...`);
+          console.error(err.original?.sqlMessage || err);
+        });
+    } else {
+      res.send(`User is not an university`);
+    }
   };
 
   update = async (req: Request, res: Response) => {

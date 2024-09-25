@@ -8,9 +8,22 @@ import { Vacancies } from "@/models/vacancies";
 class VacanciesController {
   getAll = async (req: Request, res: Response) => {
     await db.vacancies
-      .findAll()
-      .then((data) => {
-        res.json(data);
+      .findAll({
+        include: [{ model: CareerGuidances, attributes: ["name"] }],
+      })
+      .then((data: (Vacancies & { CareerGuidance?: { name: string } })[]) => {
+        let joinedData = data.map((item) => {
+          return {
+            id: item.id,
+            title: item.name,
+            skillTitle: item["CareerGuidance"]!.name,
+            skillId: item.career_guidance_id,
+            level: item.level,
+            description: item.description,
+            is_taken: item.is_taken,
+          };
+        });
+        res.json(joinedData);
       })
       .catch((err) => {
         res.send(`Something went wrong...`);

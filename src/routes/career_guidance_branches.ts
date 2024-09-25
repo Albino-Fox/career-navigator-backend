@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/get", careerGuidanceBranchesController.getAll);
 router.get("/get/:id", careerGuidanceBranchesController.get);
+router.get("/getFrom/:user_id", careerGuidanceBranchesController.getFromUser);
 
 router.post("/create", careerGuidanceBranchesController.create);
 
