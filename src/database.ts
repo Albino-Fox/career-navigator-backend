@@ -118,11 +118,11 @@ class Database {
     this.tasks.hasMany(this.answers, { foreignKey: "task_id" });
     this.answers.belongsTo(this.tasks, { foreignKey: "task_id" });
 
-    this.careerGuidanceBranches.hasMany(this.tasks, {
-      foreignKey: "career_guidance_id",
+    this.careerGuidanceBranches.hasMany(this.careerGuidances, {
+      foreignKey: "id",
     });
     this.careerGuidances.belongsTo(this.careerGuidanceBranches, {
-      foreignKey: "career_guidance_id",
+      foreignKey: "id",
     });
   }
 
