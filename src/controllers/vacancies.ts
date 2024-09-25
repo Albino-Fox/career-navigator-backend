@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
+import { Roles } from "@/types/user";
+import { CareerGuidances } from "@/models/career_guidances";
+import { Vacancies } from "@/models/vacancies";
 
 class VacanciesController {
   getAll = async (req: Request, res: Response) => {
@@ -27,14 +30,43 @@ class VacanciesController {
       });
   };
 
+  getFromUser = async (req: Request, res: Response) => {
+    await db.vacancies
+      .findAll({
+        where: { employer_id: req.params.user_id },
+        include: [{ model: CareerGuidances, attributes: ["name"] }],
+      })
+      .then((data: (Vacancies & { CareerGuidance?: { name: string } })[]) => {
+        let joinedData = data.map((item) => {
+          return {
+            id: item.id,
+            title: item.name,
+            skillTitle: item["CareerGuidance"]!.name,
+            level: item.level,
+            description: item.description,
+            is_taken: item.is_taken,
+          };
+        });
+        console.log(joinedData);
+        res.json(joinedData);
+      })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage);
+      });
+  };
+
   create = async (req: Request, res: Response) => {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
     let isValid = false;
+    if (req.body.title == "") req.body.title = null;
+    if (req.body.skill == "") req.body.skill = null;
+    if (req.body.level == "") req.body.level = null;
     await db.users.findByPk(req.body.employer_id).then((data) => {
-      if (data && data.role_id === 2) isValid = true;
+      if (data && data.role_id === Roles.employer) isValid = true;
     });
     if (isValid) {
-      await db.tasks
+      await db.vacancies
         .create({
           employer_id: req.body.employer_id,
           name: req.body.title,
@@ -45,8 +77,8 @@ class VacanciesController {
           level: req.body.level,
         })
         .then((record) => {
-          res.send(`Task ${record.id} was created`);
-          console.log(`Task ${record.id} created`);
+          res.send(`Vacancy ${record.id} was created`);
+          console.log(`Vacancy ${record.id} created`);
         })
         .catch((err) => {
           res.send(`Something went wrong...`);

@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/get", vacanciesController.getAll);
 router.get("/get/:id", vacanciesController.get);
+router.get("/getFrom/:user_id", vacanciesController.getFromUser);
 
 router.post("/create", vacanciesController.create);
 
