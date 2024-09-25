@@ -29,6 +29,10 @@ class UsersController {
 
   create = async (req: Request, res: Response) => {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
+    if (req.body.name == "") req.body.name = null;
+    if (req.body.phone_number == "") req.body.phone_number = null;
+    if (req.body.email == "") req.body.email = null;
+    if (req.body.password == "") req.body.email = null;
     await db.users
       .create({
         name: req.body.name,

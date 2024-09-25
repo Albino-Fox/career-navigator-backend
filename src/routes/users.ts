@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/get", usersController.getAll);
 router.get("/get/:id", usersController.get);
 
-router.post("/post", usersController.create);
+router.post("/create", usersController.create);
 
 router.patch("/:id/updateProfile", usersController.updateProfile);
 
