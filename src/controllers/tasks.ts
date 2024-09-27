@@ -3,6 +3,8 @@ import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
 import { Roles } from "@/types/user";
 import { Tasks } from "@/models/tasks";
+import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
+import { CareerGuidances } from "@/models/career_guidances";
 
 class TasksController {
   getAllTasks = async (req: Request, res: Response) => {
@@ -23,6 +25,48 @@ class TasksController {
       .then((data) => {
         res.json(data);
       })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage);
+      });
+  };
+  getOrigin = async (req: Request, res: Response) => {
+    await db.tasks
+      .findOne({
+        where: { id: req.params.id },
+        include: [
+          {
+            model: CareerGuidanceBranches,
+            attributes: ["level"],
+            include: [{ model: CareerGuidances, attributes: ["name"] }],
+          },
+        ],
+      })
+      .then(
+        (
+          item:
+            | (Tasks & {
+                CareerGuidanceBranch?: {
+                  level: number;
+                  CareerGuidance?: { name: string };
+                };
+              })
+            | null,
+        ) => {
+          if (item) {
+            let joinedData = {
+              id: item.id,
+              name: item.name,
+              description: item.description,
+              level: item.CareerGuidanceBranch!.level,
+              skillTitle: item.CareerGuidanceBranch!.CareerGuidance!.name,
+            };
+            res.json(joinedData);
+          } else {
+            throw new Error("Something went wrong while fetching data");
+          }
+        },
+      )
       .catch((err) => {
         res.send(`Something went wrong...`);
         console.error(err.original?.sqlMessage);

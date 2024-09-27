@@ -28,10 +28,6 @@ export const initAnswers = (sequelize: Sequelize): Model => {
         type: DataTypes.STRING(9999),
         allowNull: false,
       },
-      status: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
     },
     {
       sequelize,

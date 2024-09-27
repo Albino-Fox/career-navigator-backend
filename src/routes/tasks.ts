@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/get", tasksController.getAllTasks);
 router.get("/get/:id", tasksController.get);
+router.get("/getOrigin/:id", tasksController.getOrigin);
 router.get("/getFromBranch/:branch_id", tasksController.getFromBranch);
 
 router.post("/create", tasksController.create);

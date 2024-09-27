@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
+import { Roles } from "@/types/user";
 
 class AnswersController {
   getAll = async (req: Request, res: Response) => {
@@ -29,20 +30,31 @@ class AnswersController {
 
   create = async (req: Request, res: Response) => {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
-    await db.answers
-      .create({
-        // TODO: Add proper fields
-        // username: req.body.username,
-        // subscription_date: new Date(Date.now()).toString(),
-      })
-      .then((record) => {
-        res.send(`${record.id} was created`);
-        console.log(`Career guidance ${record.id} created`);
-      })
-      .catch((err) => {
-        res.send(`Something went wrong...`);
-        console.error(err.original?.sqlMessage || err);
-      });
+    let isValid = false;
+    if (req.body.user_id == "") req.body.user_id = null;
+    if (req.body.task_id == "") req.body.task_id = null;
+    if (req.body.answer == "") req.body.answer = null;
+    await db.users.findByPk(req.body.user_id).then((data) => {
+      if (data && data.role_id === Roles.student) isValid = true;
+    });
+    if (isValid) {
+      await db.careerGuidanceBranches
+        .create({
+          user_id: req.body.user_id,
+          task_id: req.body.task_id,
+          answer: req.body.answer,
+        })
+        .then((record) => {
+          res.send(`Answer ${record.id} was created`);
+          console.log(`Answer ${record.id} created`);
+        })
+        .catch((err) => {
+          res.send(`Something went wrong...`);
+          console.error(err.original?.sqlMessage || err);
+        });
+    } else {
+      res.send(`User is not an university`);
+    }
   };
 
   update = async (req: Request, res: Response) => {

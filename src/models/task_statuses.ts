@@ -17,7 +17,7 @@ export const initTaskStatuses = (sequelize: Sequelize): Model => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      status: {
+      is_done: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         allowNull: false,
