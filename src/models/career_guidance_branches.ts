@@ -32,6 +32,12 @@ export const initCareerGuidanceBranches = (sequelize: Sequelize): Model => {
       sequelize,
       timestamps: false,
       tableName: "career_guidance_branches",
+      indexes: [
+        {
+          unique: true,
+          fields: ["university_id", "level", "career_guidance_id"],
+        },
+      ],
     },
   );
   return new CareerGuidanceBranches();

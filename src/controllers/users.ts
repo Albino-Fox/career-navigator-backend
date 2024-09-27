@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
+import { Roles } from "@/types/user";
 
 class UsersController {
   getAll = async (req: Request, res: Response) => {
@@ -18,6 +19,29 @@ class UsersController {
   get = async (req: Request, res: Response) => {
     await db.users
       .findByPk(req.params.id)
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage);
+      });
+  };
+
+  getUniversities = async (req: Request, res: Response) => {
+    await db.users
+      .findAll({ where: { role_id: Roles.university } })
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage);
+      });
+  };
+  getUniversity = async (req: Request, res: Response) => {
+    await db.users
+      .findOne({ where: { id: req.params.id, role_id: Roles.university } })
       .then((data) => {
         res.json(data);
       })

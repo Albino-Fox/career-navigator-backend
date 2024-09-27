@@ -4,6 +4,7 @@ import { stringifyJSON } from "@/utils/index.ts";
 import { Roles } from "@/types/user";
 import { CareerGuidances } from "@/models/career_guidances";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
+import { Tasks } from "@/models/tasks";
 
 class CareerGuidanceBranchesController {
   getAll = async (req: Request, res: Response) => {
@@ -52,7 +53,7 @@ class CareerGuidanceBranchesController {
       });
   };
 
-  getFromUser = async (req: Request, res: Response) => {
+  getFrom = async (req: Request, res: Response) => {
     await db.careerGuidanceBranches
       .findAll({
         where: { university_id: req.params.user_id },
@@ -79,6 +80,95 @@ class CareerGuidanceBranchesController {
         res.send(`Something went wrong...`);
         console.error(err.original?.sqlMessage);
       });
+  };
+
+  getTasksOfCareerGuidance = async (req: Request, res: Response) => {
+    await db.careerGuidanceBranches
+      .findAll({
+        where: {
+          university_id: req.body.university_id,
+          career_guidance_id: req.params.career_guidance_id,
+        },
+        include: [
+          { model: CareerGuidances, attributes: ["name"] },
+          { model: Tasks, attributes: ["name", "description", "id"] },
+        ],
+        order: [["level", "ASC"]],
+      })
+      .then(
+        (
+          data: (CareerGuidanceBranches & {
+            CareerGuidance?: { name: string };
+          } & {
+            Tasks?: { name: string; description: string; id: number }[];
+          })[],
+        ) => {
+          let joinedData = data.map((item) => {
+            return {
+              id: item.id,
+              tasks: item["Tasks"],
+              level: item.level,
+            };
+          });
+          let completeData = {
+            name: data[0]["CareerGuidance"]!.name,
+            skillId: data[0].career_guidance_id,
+            branches: joinedData,
+          };
+          res.json(completeData);
+        },
+      )
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage);
+      });
+  };
+  getTasksOfCareerGuidanceAll = async (req: Request, res: Response) => {
+    let finalData = [];
+    let skills = await db.careerGuidances.findAll().then((data) => data);
+    for (let skill of skills) {
+      let chunk = await db.careerGuidanceBranches
+        .findAll({
+          where: {
+            university_id: req.body.university_id,
+            career_guidance_id: skill.id,
+          },
+          include: [
+            { model: CareerGuidances, attributes: ["name"] },
+            { model: Tasks, attributes: ["name", "description", "id"] },
+          ],
+          order: [["level", "ASC"]],
+        })
+        .then(
+          (
+            data: (CareerGuidanceBranches & {
+              CareerGuidance?: { name: string };
+            } & {
+              Tasks?: { name: string; description: string; id: number }[];
+            })[],
+          ) => {
+            let joinedData = data.map((item) => {
+              return {
+                id: item.id,
+                tasks: item["Tasks"],
+                level: item.level,
+              };
+            });
+            let completeData = {
+              name: data[0]["CareerGuidance"]!.name,
+              skillId: data[0].career_guidance_id,
+              branches: joinedData,
+            };
+            return completeData;
+          },
+        )
+        .catch((err) => {
+          console.error(err.original?.sqlMessage);
+        });
+      if (chunk) finalData.push(chunk);
+    }
+    if (finalData) res.send(finalData);
+    else res.send(`Something went wrong...`);
   };
 
   create = async (req: Request, res: Response) => {
