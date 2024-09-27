@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
 import { Roles } from "@/types/user";
+import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
+import { Tasks } from "@/models/tasks";
+import { Answers } from "@/models/answers";
+import { CareerGuidances } from "@/models/career_guidances";
 
 class AnswersController {
   getAll = async (req: Request, res: Response) => {
@@ -17,8 +21,29 @@ class AnswersController {
   };
 
   get = async (req: Request, res: Response) => {
-    await db.answers
-      .findByPk(req.params.id)
+    await db.careerGuidanceBranches
+      .findAll({
+        where: { university_id: req.params.university_id },
+        include: [
+          {
+            model: CareerGuidances,
+            attributes: ["name"],
+          },
+          {
+            model: Tasks,
+            include: [
+              {
+                model: Answers,
+                attributes: ["id", "answer", "user_id"],
+                required: true,
+              },
+            ],
+            attributes: ["id", "name", "description"],
+            required: true,
+          },
+        ],
+        attributes: ["id", "level"],
+      })
       .then((data) => {
         res.json(data);
       })

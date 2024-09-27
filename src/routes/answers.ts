@@ -5,7 +5,7 @@ import { answersController } from "@/controllers/answers";
 const router = express.Router();
 
 router.get("/get", answersController.getAll);
-router.get("/get/:id", answersController.get);
+router.get("/get/:university_id", answersController.get);
 
 router.post("/create", answersController.create);
 
