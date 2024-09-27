@@ -38,7 +38,7 @@ class AnswersController {
       if (data && data.role_id === Roles.student) isValid = true;
     });
     if (isValid) {
-      await db.careerGuidanceBranches
+      await db.answers
         .create({
           user_id: req.body.user_id,
           task_id: req.body.task_id,
@@ -53,7 +53,7 @@ class AnswersController {
           console.error(err.original?.sqlMessage || err);
         });
     } else {
-      res.send(`User is not an university`);
+      res.send(`User is not a student`);
     }
   };
 
