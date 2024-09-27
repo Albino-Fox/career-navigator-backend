@@ -4,6 +4,7 @@ import { stringifyJSON } from "@/utils/index.ts";
 import { Tasks } from "@/models/tasks";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
 import { Roles } from "@/types/user";
+import { CareerGuidances } from "@/models/career_guidances";
 
 class StudentSkillsController {
   getAll = async (req: Request, res: Response) => {
@@ -20,7 +21,15 @@ class StudentSkillsController {
 
   get = async (req: Request, res: Response) => {
     await db.studentSkills
-      .findByPk(req.params.id)
+      .findAll({
+        where: { user_id: req.params.id },
+        include: [
+          {
+            model: CareerGuidanceBranches,
+            include: [{ model: CareerGuidances }],
+          },
+        ],
+      })
       .then((data) => {
         res.json(data);
       })
