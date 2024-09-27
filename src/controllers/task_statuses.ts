@@ -49,9 +49,9 @@ class TaskStatusesController {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
     await db.taskStatuses
       .update(
-        { [req.body.key]: req.body.value },
+        { is_done: req.body.is_done },
         {
-          where: { id: req.body.id },
+          where: { task_id: req.body.task_id },
         },
       )
       .then((result) => {

@@ -27,6 +27,12 @@ export const initTaskStatuses = (sequelize: Sequelize): Model => {
       sequelize,
       timestamps: false,
       tableName: "task_statuses",
+      indexes: [
+        {
+          unique: true,
+          fields: ["user_id", "task_id"],
+        },
+      ],
     },
   );
   return new TaskStatuses();
