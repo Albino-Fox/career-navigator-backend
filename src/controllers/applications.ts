@@ -31,9 +31,8 @@ class ApplicationsController {
     console.log(`Recieved CREATE request: ${stringifyJSON(req.body)}`);
     await db.applications
       .create({
-        // TODO: Add proper fields
-        // username: req.body.username,
-        // subscription_date: new Date(Date.now()).toString(),
+        user_id: req.body.user_id,
+        vacancy_id: req.body.vacancy_id,
       })
       .then((record) => {
         res.send(`${record.id} was created`);

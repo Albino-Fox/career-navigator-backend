@@ -47,6 +47,8 @@ class TaskStatusesController {
 
   update = async (req: Request, res: Response) => {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
+    // TODO: nail it :3c
+    let isSuccessfulUpdate = false;
     await db.taskStatuses
       .update(
         { is_done: req.body.is_done },
@@ -60,6 +62,7 @@ class TaskStatusesController {
           res.send(
             `${req.body.key} of ${req.body.id} has been changed to ${req.body.value}`,
           );
+          isSuccessfulUpdate = true;
         } else {
           res.send(`${req.body.key} of ${req.body.id} was not updated...`);
         }
@@ -68,6 +71,9 @@ class TaskStatusesController {
         res.send(`Something went wrong...`);
         console.error(err.original?.sqlMessage || err);
       });
+    if (isSuccessfulUpdate) {
+      // TODO: Check branch completion and mark "is_completed" on all/all
+    }
   };
 
   delete = async (req: Request, res: Response) => {
