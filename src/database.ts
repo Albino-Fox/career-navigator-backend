@@ -19,6 +19,7 @@ import { Answers, initAnswers } from "./models/answers";
 import { Applications, initApplications } from "./models/applications";
 import { initTasks, Tasks } from "./models/tasks";
 import { initTaskStatuses, TaskStatuses } from "./models/task_statuses";
+import { initStudentSkills, StudentSkills } from "./models/student_skills";
 
 class Database {
   public sequelize: Sequelize = new Sequelize({
@@ -44,6 +45,7 @@ class Database {
   public roles = Roles;
 
   public users = Users;
+  public studentSkills = StudentSkills;
 
   public vacancies = Vacancies;
 
@@ -64,11 +66,11 @@ class Database {
     initRoles(this.sequelize);
 
     initUsers(this.sequelize);
+    initStudentSkills(this.sequelize);
 
     initVacancies(this.sequelize);
 
     //associations
-    // WARNING: Untested
 
     this.users.hasMany(this.applications, { foreignKey: "user_id" });
     this.applications.belongsTo(this.users, { foreignKey: "user_id" });
@@ -130,6 +132,16 @@ class Database {
     });
     this.careerGuidances.belongsTo(this.careerGuidanceBranches, {
       foreignKey: "id",
+    });
+
+    this.users.hasMany(this.studentSkills, { foreignKey: "user_id" });
+    this.studentSkills.belongsTo(this.users, { foreignKey: "user_id" });
+
+    this.careerGuidanceBranches.hasMany(this.studentSkills, {
+      foreignKey: "career_guidance_branch_id",
+    });
+    this.studentSkills.belongsTo(this.careerGuidanceBranches, {
+      foreignKey: "career_guidance_branch_id",
     });
   }
 
