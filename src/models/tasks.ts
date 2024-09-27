@@ -4,7 +4,7 @@ export class Tasks extends Model {
   declare id: number;
   public name!: string;
   public description!: string;
-  public career_guidance_id!: number;
+  public career_guidance_branch_id!: number;
 }
 
 export const initTasks = (sequelize: Sequelize): Model => {

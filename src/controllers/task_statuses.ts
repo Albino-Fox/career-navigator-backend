@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
+import { Tasks } from "@/models/tasks";
+import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
+import { TaskStatuses } from "@/models/task_statuses";
 
 class TaskStatusesController {
   getAll = async (req: Request, res: Response) => {
@@ -47,8 +50,9 @@ class TaskStatusesController {
 
   update = async (req: Request, res: Response) => {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
-    // TODO: nail it :3c
     let isSuccessfulUpdate = false;
+    if (req.body.is_done == "") req.body.is_done = null;
+    if (req.body.task_id == "") req.body.task_id = null;
     await db.taskStatuses
       .update(
         { is_done: req.body.is_done },
@@ -59,12 +63,10 @@ class TaskStatusesController {
       .then((result) => {
         if (result[0] === 1) {
           // one by one
-          res.send(
-            `${req.body.key} of ${req.body.id} has been changed to ${req.body.value}`,
-          );
           isSuccessfulUpdate = true;
+          res.send(`TaskStatus ${req.body.is_done} was updated`);
         } else {
-          res.send(`${req.body.key} of ${req.body.id} was not updated...`);
+          res.send(`TaskStatus ${req.body.is_done} was not updated...`);
         }
       })
       .catch((err) => {
@@ -72,7 +74,36 @@ class TaskStatusesController {
         console.error(err.original?.sqlMessage || err);
       });
     if (isSuccessfulUpdate) {
-      // TODO: Check branch completion and mark "is_completed" on all/all
+      let user_id = await db.taskStatuses.findOne({
+        where: { task_id: req.body.task_id },
+        attributes: ["user_id"],
+      });
+      let task = await db.tasks.findOne({
+        where: { id: req.body.task_id },
+        attributes: ["career_guidance_branch_id"],
+      });
+      if (task) {
+        let total = await db.tasks.count({
+          where: { career_guidance_branch_id: task.career_guidance_branch_id },
+        });
+        let completed = await db.tasks.count({
+          where: { career_guidance_branch_id: task.career_guidance_branch_id },
+          include: [{ model: TaskStatuses, where: { is_done: true } }],
+        });
+        if (total === completed && user_id)
+          await db.studentSkills
+            .update(
+              { is_completed: true },
+              {
+                where: {
+                  career_guidance_branch_id: task.career_guidance_branch_id,
+                  user_id: user_id.user_id,
+                },
+              },
+            )
+            .then((data) => console.log(data))
+            .catch((err) => console.error(err.original?.sqlMessage || err));
+      }
     }
   };
 
