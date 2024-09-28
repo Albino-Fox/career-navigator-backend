@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/get", studentSkillsController.getAll);
 router.get("/get/:id", studentSkillsController.get);
+router.get("/getMax/:id", studentSkillsController.getMax);
 
 router.post("/create", studentSkillsController.create);
 

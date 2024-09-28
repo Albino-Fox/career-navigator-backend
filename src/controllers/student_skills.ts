@@ -5,6 +5,7 @@ import { Tasks } from "@/models/tasks";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
 import { Roles } from "@/types/user";
 import { CareerGuidances } from "@/models/career_guidances";
+import { Users } from "@/models/users";
 
 class StudentSkillsController {
   getAll = async (req: Request, res: Response) => {
@@ -26,7 +27,10 @@ class StudentSkillsController {
         include: [
           {
             model: CareerGuidanceBranches,
-            include: [{ model: CareerGuidances }],
+            include: [
+              { model: CareerGuidances },
+              { model: Users, attributes: ["name"] },
+            ],
           },
         ],
       })
@@ -35,6 +39,65 @@ class StudentSkillsController {
       })
       .catch((err) => {
         res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage);
+      });
+  };
+
+  getMax = async (req: Request, res: Response) => {
+    await db.studentSkills
+      .findAll({
+        where: { user_id: req.params.id },
+        include: [
+          {
+            model: CareerGuidanceBranches,
+            include: [
+              { model: CareerGuidances },
+              { model: Users, attributes: ["name"] },
+            ],
+          },
+        ],
+      })
+      .then(async (data) => {
+        const merged: { [key: string]: any } = {};
+
+        data.forEach((item: any) => {
+          const { university_id, career_guidance_id, level } =
+            item.CareerGuidanceBranch;
+          const { is_completed } = item;
+          const key = `${university_id}-${career_guidance_id}`;
+
+          if (is_completed) {
+            if (
+              !merged[key] ||
+              merged[key].CareerGuidanceBranch.level < level
+            ) {
+              merged[key] = {
+                ...item.get(),
+                CareerGuidanceBranch: {
+                  ...item.CareerGuidanceBranch.get(),
+                  level,
+                },
+              };
+            }
+          } else {
+            if (!merged[key]) {
+              merged[key] = {
+                ...item.get(),
+                CareerGuidanceBranch: {
+                  ...item.CareerGuidanceBranch.get(),
+                  level: 0,
+                },
+              };
+            }
+          }
+        });
+        const mergedArray = Object.values(merged);
+
+        res.json(mergedArray);
+      })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err);
         console.error(err.original?.sqlMessage);
       });
   };
