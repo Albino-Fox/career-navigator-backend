@@ -5,6 +5,7 @@ import { Roles } from "@/types/user";
 import { CareerGuidances } from "@/models/career_guidances";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
 import { Tasks } from "@/models/tasks";
+import { TaskStatuses } from "@/models/task_statuses";
 
 class CareerGuidanceBranchesController {
   getAll = async (req: Request, res: Response) => {
@@ -83,6 +84,7 @@ class CareerGuidanceBranchesController {
   };
 
   getTasksOfCareerGuidance = async (req: Request, res: Response) => {
+    console.log(req.body);
     await db.careerGuidanceBranches
       .findAll({
         where: {
@@ -91,7 +93,18 @@ class CareerGuidanceBranchesController {
         },
         include: [
           { model: CareerGuidances, attributes: ["name"] },
-          { model: Tasks, attributes: ["name", "description", "id"] },
+          {
+            model: Tasks,
+            attributes: ["name", "description", "id"],
+            include: [
+              {
+                model: TaskStatuses,
+                where: { user_id: req.body.user_id },
+                attributes: ["is_done"],
+                required: false,
+              },
+            ],
+          },
         ],
         order: [["level", "ASC"]],
       })
