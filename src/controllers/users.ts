@@ -107,6 +107,57 @@ class UsersController {
       });
   };
 
+  updateProfileUniversity = async (req: Request, res: Response) => {
+    console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
+    await db.users
+      .update(
+        {
+          name: req.body.name,
+          description: req.body.description,
+        },
+        {
+          where: { id: req.params.id },
+        },
+      )
+      .then((result) => {
+        if (result[0] === 1) {
+          // one by one
+          res.send(`User(university) ${req.params.id} has been updated`);
+        } else {
+          res.send(`User(university) ${req.params.id} was not updated...`);
+        }
+      })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage || err);
+      });
+  };
+
+  setFocus = async (req: Request, res: Response) => {
+    console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
+    await db.users
+      .update(
+        {
+          focus_vacancy_id: req.body.focus_vacancy_id,
+        },
+        {
+          where: { id: req.body.user_id },
+        },
+      )
+      .then((result) => {
+        if (result[0] === 1) {
+          // one by one
+          res.send(`Vacancy focus on ${req.params.id} `);
+        } else {
+          res.send(`No vacancy focus on ${req.params.id}...`);
+        }
+      })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage || err);
+      });
+  };
+
   delete = async (req: Request, res: Response) => {
     console.log(`Recieved DELETE request: ${stringifyJSON(req.body)}`);
     await db.users

@@ -33,7 +33,10 @@ class VacanciesController {
 
   get = async (req: Request, res: Response) => {
     await db.vacancies
-      .findByPk(req.params.id)
+      .findOne({
+        where: { id: req.params.id },
+        include: [{ model: CareerGuidances, attributes: ["name"] }],
+      })
       .then((data) => {
         res.json(data);
       })
@@ -122,6 +125,49 @@ class VacanciesController {
           res.send(`Vacancy ${req.params.id} was updated`);
         } else {
           res.send(`Vacancy ${req.params.id} was not updated...`);
+        }
+      })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage || err);
+      });
+  };
+
+  setStudent = async (req: Request, res: Response) => {
+    console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
+    const user_id = req.body.is_taken === false ? null : req.body.user_id;
+    await db.vacancies
+      .update(
+        {
+          is_taken: req.body.is_taken,
+          user_id: user_id,
+        },
+        {
+          where: { id: req.params.id },
+        },
+      )
+      .then(async (result) => {
+        if (result[0] === 1) {
+          // one by one
+          res.send(`Vacancy ${req.params.id} was updated`);
+        } else {
+          res.send(`Vacancy ${req.params.id} was not updated...`);
+        }
+        if (user_id !== null) {
+          await db.users
+            .update({ is_completing: true }, { where: { id: user_id } })
+            .catch((err) => {
+              throw err;
+            });
+        } else {
+          await db.users
+            .update(
+              { is_completing: true },
+              { where: { id: req.body.user_id } },
+            )
+            .catch((err) => {
+              throw err;
+            });
         }
       })
       .catch((err) => {

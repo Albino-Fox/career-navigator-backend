@@ -11,6 +11,7 @@ router.get("/getFrom/:user_id", vacanciesController.getFromUser);
 router.post("/create", vacanciesController.create);
 
 router.patch("/update/:id", vacanciesController.update);
+router.patch("/setStudent/:id", vacanciesController.setStudent);
 
 router.delete("/delete", vacanciesController.delete);
 
