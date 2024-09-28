@@ -239,6 +239,9 @@ class CareerGuidanceBranchesController {
 
   delete = async (req: Request, res: Response) => {
     console.log(`Recieved DELETE request: ${stringifyJSON(req.body)}`);
+    await db.studentSkills.destroy({
+      where: { career_guidance_branch_id: req.body.id },
+    });
     await db.tasks.destroy({
       where: { career_guidance_branch_id: req.body.id },
     });
