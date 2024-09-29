@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
 import { Roles } from "@/types/user";
+import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
+import { StudentSkills } from "@/models/student_skills";
+import { Users } from "@/models/users";
+import { CareerGuidances } from "@/models/career_guidances";
 
 class UsersController {
   getAll = async (req: Request, res: Response) => {
@@ -155,6 +159,46 @@ class UsersController {
       .catch((err) => {
         res.send(`Something went wrong...`);
         console.error(err.original?.sqlMessage || err);
+      });
+  };
+
+  getSuitableSkills = async (req: Request, res: Response) => {
+    await db.vacancies
+      .findOne({
+        where: { id: req.body.vacancy_id },
+        attributes: ["career_guidance_id", "level"],
+      })
+      .then(async (vacancy) => {
+        if (vacancy) {
+          let skills: (StudentSkills & {
+            CareerGuidanceBranch?: { level: number };
+          })[] = await db.studentSkills
+            .findAll({
+              where: { user_id: req.body.user_id, is_completed: true },
+              include: [
+                {
+                  model: CareerGuidanceBranches,
+                  where: { career_guidance_id: vacancy.career_guidance_id },
+                  attributes: ["career_guidance_id", "level", "university_id"],
+                  include: [
+                    { model: Users, attributes: ["name"] },
+                    { model: CareerGuidances, attributes: ["name"] },
+                  ],
+                },
+              ],
+            })
+            .catch((err) => {
+              throw err;
+            });
+          skills = skills.filter((item) => {
+            return item["CareerGuidanceBranch"]!.level >= vacancy.level;
+          });
+          res.json(skills);
+        }
+      })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage);
       });
   };
 

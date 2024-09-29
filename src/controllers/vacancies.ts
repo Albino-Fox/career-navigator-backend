@@ -4,6 +4,7 @@ import { stringifyJSON } from "@/utils/index.ts";
 import { Roles } from "@/types/user";
 import { CareerGuidances } from "@/models/career_guidances";
 import { Vacancies } from "@/models/vacancies";
+import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
 
 class VacanciesController {
   getAll = async (req: Request, res: Response) => {

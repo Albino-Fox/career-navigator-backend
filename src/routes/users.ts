@@ -10,13 +10,14 @@ router.get("/getUniversities", usersController.getUniversities);
 router.get("/getUniversity/:id", usersController.getUniversity);
 
 router.post("/create", usersController.create);
+router.post("/getSuitableSkills", usersController.getSuitableSkills);
 
 router.patch("/:id/updateProfile", usersController.updateProfile);
 router.patch(
   "/:id/updateProfileUniversity",
   usersController.updateProfileUniversity,
 );
-router.patch("/setFocus/", usersController.setFocus);
+router.patch("/setFocus", usersController.setFocus);
 
 router.delete("/delete", usersController.delete);
 
