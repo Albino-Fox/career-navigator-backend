@@ -10,6 +10,7 @@ class VacanciesController {
   getAll = async (req: Request, res: Response) => {
     await db.vacancies
       .findAll({
+        where: { is_taken: false },
         include: [{ model: CareerGuidances, attributes: ["name"] }],
       })
       .then((data: (Vacancies & { CareerGuidance?: { name: string } })[]) => {

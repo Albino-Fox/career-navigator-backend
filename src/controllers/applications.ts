@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
+import { Applications } from "@/models/applications";
+import { Users } from "@/models/users";
+import { StudentSkills } from "@/models/student_skills";
+import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
+import { CareerGuidances } from "@/models/career_guidances";
 
 class ApplicationsController {
   getAll = async (req: Request, res: Response) => {
@@ -11,6 +16,86 @@ class ApplicationsController {
       })
       .catch((err) => {
         res.send(`Something went wrong...`);
+        console.error(err.original?.sqlMessage);
+      });
+  };
+
+  getOfUser = async (req: Request, res: Response) => {
+    let counter = 0;
+    await db.vacancies
+      .findAll({
+        where: { employer_id: req.params.id },
+        include: [
+          {
+            model: Applications,
+            attributes: ["id", "user_id"],
+            required: true,
+            include: [
+              {
+                model: Users,
+                attributes: [
+                  "name",
+                  "surname",
+                  "patronymic",
+                  "email",
+                  "phone_number",
+                ],
+              },
+            ],
+          },
+          { model: CareerGuidances, attributes: ["name"] },
+        ],
+      })
+      .then(async (vacanciesOriginal: any) => {
+        let vacancies = JSON.parse(JSON.stringify(vacanciesOriginal));
+        if (vacancies) {
+          for (let i = 0; i < vacancies.length; i++) {
+            for (let j = 0; j < vacancies[i].Applications.length; j++) {
+              try {
+                console.log("counter " + counter);
+                let skills = await db.studentSkills.findAll({
+                  where: {
+                    user_id: vacancies[i].Applications[j].user_id,
+                    is_completed: true,
+                  },
+                  attributes: ["career_guidance_branch_id"],
+                  include: [
+                    {
+                      model: CareerGuidanceBranches,
+                      where: {
+                        career_guidance_id: vacancies[i].career_guidance_id,
+                      },
+                      attributes: [
+                        "career_guidance_id",
+                        "level",
+                        "university_id",
+                      ],
+                      include: [
+                        { model: CareerGuidances, attributes: ["name"] },
+                        { model: Users, attributes: ["name"] },
+                      ],
+                    },
+                  ],
+                });
+
+                skills = skills.filter(
+                  (item: any) =>
+                    item.CareerGuidanceBranch?.level >= vacancies[0].level,
+                );
+                Object.assign(vacancies[i].Applications[j], { Skills: skills });
+              } catch (err) {
+                console.error(err);
+              }
+            }
+          }
+          res.json(vacancies);
+        } else {
+          throw Error("no data");
+        }
+      })
+      .catch((err) => {
+        res.send(`Something went wrong...`);
+        console.log(err);
         console.error(err.original?.sqlMessage);
       });
   };

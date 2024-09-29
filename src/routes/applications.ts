@@ -5,6 +5,7 @@ import { applicationsController } from "@/controllers/applications";
 const router = express.Router();
 
 router.get("/get", applicationsController.getAll);
+router.get("/getOfUser/:id", applicationsController.getOfUser);
 
 router.post("/checkApplication", applicationsController.checkApplication);
 router.post("/create", applicationsController.create);
