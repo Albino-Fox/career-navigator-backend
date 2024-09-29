@@ -15,11 +15,17 @@ class ApplicationsController {
       });
   };
 
-  get = async (req: Request, res: Response) => {
+  checkApplication = async (req: Request, res: Response) => {
     await db.applications
-      .findByPk(req.params.id)
+      .findOne({
+        where: { id: req.body.user_id, vacancy_id: req.body.vacancy_id },
+      })
       .then((data) => {
-        res.json(data);
+        if (data) {
+          res.json(true);
+        } else {
+          res.json(false);
+        }
       })
       .catch((err) => {
         res.send(`Something went wrong...`);

@@ -151,9 +151,9 @@ class UsersController {
       .then((result) => {
         if (result[0] === 1) {
           // one by one
-          res.send(`Vacancy focus on ${req.params.id} `);
+          res.send(`Vacancy focus on ${req.body.focus_vacancy_id} `);
         } else {
-          res.send(`No vacancy focus on ${req.params.id}...`);
+          res.send(`No vacancy focus on ${req.body.focus_vacancy_id}...`);
         }
       })
       .catch((err) => {

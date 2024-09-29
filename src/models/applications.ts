@@ -27,6 +27,12 @@ export const initApplications = (sequelize: Sequelize): Model => {
       sequelize,
       timestamps: false,
       tableName: "applications",
+      indexes: [
+        {
+          unique: true,
+          fields: ["user_id", "vacancy_id"],
+        },
+      ],
     },
   );
   return new Applications();
