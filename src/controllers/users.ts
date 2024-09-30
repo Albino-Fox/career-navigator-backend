@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
-import { Roles } from "@/types/user";
+import { UserRoles } from "@/types/user";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
 import { StudentSkills } from "@/models/student_skills";
 import { Users } from "@/models/users";
 import { CareerGuidances } from "@/models/career_guidances";
+import { Roles } from "@/models/roles";
 
 class UsersController {
   getAll = async (req: Request, res: Response) => {
@@ -22,7 +23,10 @@ class UsersController {
 
   get = async (req: Request, res: Response) => {
     await db.users
-      .findByPk(req.params.id)
+      .findOne({
+        where: { id: req.params.id },
+        include: [{ model: Roles, attributes: ["name"] }],
+      })
       .then((data) => {
         res.json(data);
       })
@@ -34,7 +38,7 @@ class UsersController {
 
   getUniversities = async (req: Request, res: Response) => {
     await db.users
-      .findAll({ where: { role_id: Roles.university } })
+      .findAll({ where: { role_id: UserRoles.university } })
       .then((data) => {
         res.json(data);
       })
@@ -45,7 +49,7 @@ class UsersController {
   };
   getUniversity = async (req: Request, res: Response) => {
     await db.users
-      .findOne({ where: { id: req.params.id, role_id: Roles.university } })
+      .findOne({ where: { id: req.params.id, role_id: UserRoles.university } })
       .then((data) => {
         res.json(data);
       })
@@ -92,6 +96,7 @@ class UsersController {
           name: req.body.name,
           surname: req.body.surname,
           patronymic: req.body.patronymic,
+          description: req.body.description,
         },
         {
           where: { id: req.params.id },

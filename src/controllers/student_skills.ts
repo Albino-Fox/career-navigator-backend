@@ -3,7 +3,7 @@ import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
 import { Tasks } from "@/models/tasks";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
-import { Roles } from "@/types/user";
+import { UserRoles } from "@/types/user";
 import { CareerGuidances } from "@/models/career_guidances";
 import { Users } from "@/models/users";
 
@@ -110,7 +110,7 @@ class StudentSkillsController {
     if (req.body.university_id == "") req.body.university_id = null;
     if (req.body.career_guidance_id == "") req.body.career_guidance_id = null;
     await db.users.findByPk(req.body.user_id).then((data) => {
-      if (data && data.role_id === Roles.student) isValid = true;
+      if (data && data.role_id === UserRoles.student) isValid = true;
     });
     if (isValid) {
       let branchesTasks: (CareerGuidanceBranches & {

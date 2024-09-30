@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
-import { Roles } from "@/types/user";
+import { UserRoles } from "@/types/user";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
 import { Tasks } from "@/models/tasks";
 import { Answers } from "@/models/answers";
@@ -60,7 +60,7 @@ class AnswersController {
     if (req.body.task_id == "") req.body.task_id = null;
     if (req.body.answer == "") req.body.answer = null;
     await db.users.findByPk(req.body.user_id).then((data) => {
-      if (data && data.role_id === Roles.student) isValid = true;
+      if (data && data.role_id === UserRoles.student) isValid = true;
     });
     if (isValid) {
       await db.answers

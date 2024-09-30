@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
-import { Roles } from "@/types/user";
+import { UserRoles } from "@/types/user";
 import { CareerGuidances } from "@/models/career_guidances";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
 import { Tasks } from "@/models/tasks";
@@ -190,7 +190,7 @@ class CareerGuidanceBranchesController {
     if (req.body.level == "") req.body.level = null;
     if (req.body.career_guidance_id == "") req.body.career_guidance_id = null;
     await db.users.findByPk(req.body.university_id).then((data) => {
-      if (data && data.role_id === Roles.university) isValid = true;
+      if (data && data.role_id === UserRoles.university) isValid = true;
     });
     if (isValid) {
       await db.careerGuidanceBranches

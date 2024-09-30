@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
-import { Roles } from "@/types/user";
+import { UserRoles } from "@/types/user";
 import { CareerGuidances } from "@/models/career_guidances";
 import { Vacancies } from "@/models/vacancies";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
@@ -82,7 +82,7 @@ class VacanciesController {
     if (req.body.skill == "") req.body.skill = null;
     if (req.body.level == "") req.body.level = null;
     await db.users.findByPk(req.body.employer_id).then((data) => {
-      if (data && data.role_id === Roles.employer) isValid = true;
+      if (data && data.role_id === UserRoles.employer) isValid = true;
     });
     if (isValid) {
       await db.vacancies
@@ -187,7 +187,7 @@ class VacanciesController {
           where: {
             focus_vacancy_id: req.body.id,
             is_completing: true,
-            role_id: Roles.student,
+            role_id: UserRoles.student,
           },
           attributes: ["id"],
         })

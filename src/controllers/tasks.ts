@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import db from "@/database.ts";
 import { stringifyJSON } from "@/utils/index.ts";
-import { Roles } from "@/types/user";
+import { UserRoles } from "@/types/user";
 import { Tasks } from "@/models/tasks";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
 import { CareerGuidances } from "@/models/career_guidances";
@@ -94,7 +94,7 @@ class TasksController {
     if (req.body.career_guidance_branch_id == "")
       req.body.career_guidance_branch_id = null;
     await db.users.findByPk(req.body.university_id).then((data) => {
-      if (data && data.role_id === Roles.university) isValid = true;
+      if (data && data.role_id === UserRoles.university) isValid = true;
     });
     if (isValid) {
       await db.tasks
@@ -120,7 +120,7 @@ class TasksController {
     console.log(`Recieved UPDATE request: ${stringifyJSON(req.body)}`);
     let isValid = false;
     await db.users.findByPk(req.body.university_id).then((data) => {
-      if (data && data.role_id === Roles.university) isValid = true;
+      if (data && data.role_id === UserRoles.university) isValid = true;
     });
     if (isValid) {
       await db.tasks
