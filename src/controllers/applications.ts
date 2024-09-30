@@ -103,7 +103,7 @@ class ApplicationsController {
   checkApplication = async (req: Request, res: Response) => {
     await db.applications
       .findOne({
-        where: { id: req.body.user_id, vacancy_id: req.body.vacancy_id },
+        where: { user_id: req.body.user_id, vacancy_id: req.body.vacancy_id },
       })
       .then((data) => {
         if (data) {

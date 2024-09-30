@@ -5,6 +5,7 @@ import { Roles } from "@/types/user";
 import { CareerGuidances } from "@/models/career_guidances";
 import { Vacancies } from "@/models/vacancies";
 import { CareerGuidanceBranches } from "@/models/career_guidance_branches";
+import { Users } from "@/models/users";
 
 class VacanciesController {
   getAll = async (req: Request, res: Response) => {
@@ -145,15 +146,15 @@ class VacanciesController {
           user_id: user_id,
         },
         {
-          where: { id: req.params.id },
+          where: { id: req.body.id },
         },
       )
       .then(async (result) => {
         if (result[0] === 1) {
           // one by one
-          res.send(`Vacancy ${req.params.id} was updated`);
+          res.send(`Vacancy ${req.body.id} was updated`);
         } else {
-          res.send(`Vacancy ${req.params.id} was not updated...`);
+          res.send(`Vacancy ${req.body.id} was not updated...`);
         }
         if (user_id !== null) {
           await db.users
@@ -180,23 +181,46 @@ class VacanciesController {
 
   delete = async (req: Request, res: Response) => {
     console.log(`Recieved DELETE request: ${stringifyJSON(req.body)}`);
-    await db.vacancies
-      .destroy({
-        where: {
-          id: req.body.id,
-        },
-      })
-      .then((result) => {
-        if (result === 1) {
-          res.send(`${req.body.id} has been deleted.`);
-        } else {
-          res.send(`${req.body.id} is not found`);
-        }
-      })
-      .catch((err) => {
-        res.send(`Something went wrong...`);
-        console.error(err.original?.sqlMessage || err);
-      });
+    try {
+      await db.users
+        .findOne({
+          where: {
+            focus_vacancy_id: req.body.id,
+            is_completing: true,
+            role_id: Roles.student,
+          },
+          attributes: ["id"],
+        })
+        .then(async (data) => {
+          if (data)
+            await db.users.update(
+              { is_completing: false },
+              { where: { id: data.id } },
+            );
+        })
+        .catch((err) => {
+          throw new Error(err.original?.sqlMessage) || err;
+        });
+      await db.vacancies
+        .destroy({
+          where: {
+            id: req.body.id,
+          },
+        })
+        .then((result) => {
+          if (result === 1) {
+            res.send(`${req.body.id} has been deleted.`);
+          } else {
+            res.send(`${req.body.id} is not found`);
+          }
+        })
+        .catch((err) => {
+          throw err;
+        });
+    } catch (err) {
+      res.send("Something went wrong...");
+      console.error(err);
+    }
   };
 }
 
