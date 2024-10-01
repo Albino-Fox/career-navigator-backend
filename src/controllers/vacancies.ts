@@ -165,7 +165,7 @@ class VacanciesController {
         } else {
           await db.users
             .update(
-              { is_completing: true },
+              { is_completing: false },
               { where: { id: req.body.user_id } },
             )
             .catch((err) => {

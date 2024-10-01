@@ -53,11 +53,12 @@ class TaskStatusesController {
     let isSuccessfulUpdate = false;
     if (req.body.is_done == "") req.body.is_done = null;
     if (req.body.task_id == "") req.body.task_id = null;
+    if (req.body.user_id == "") req.body.user_id = null;
     await db.taskStatuses
       .update(
         { is_done: req.body.is_done },
         {
-          where: { task_id: req.body.task_id },
+          where: { task_id: req.body.task_id, user_id: req.body.user_id },
         },
       )
       .then((result) => {
@@ -75,20 +76,25 @@ class TaskStatusesController {
       });
     if (isSuccessfulUpdate) {
       let user_id = await db.taskStatuses.findOne({
-        where: { task_id: req.body.task_id },
+        where: { task_id: req.body.task_id, user_id: req.body.user_id },
         attributes: ["user_id"],
       });
       let task = await db.tasks.findOne({
         where: { id: req.body.task_id },
         attributes: ["career_guidance_branch_id"],
       });
-      if (task) {
+      if (task && user_id) {
         let total = await db.tasks.count({
           where: { career_guidance_branch_id: task.career_guidance_branch_id },
         });
         let completed = await db.tasks.count({
           where: { career_guidance_branch_id: task.career_guidance_branch_id },
-          include: [{ model: TaskStatuses, where: { is_done: true } }],
+          include: [
+            {
+              model: TaskStatuses,
+              where: { is_done: true, user_id: req.body.user_id },
+            },
+          ],
         });
         if (total === completed && user_id)
           await db.studentSkills
@@ -101,7 +107,9 @@ class TaskStatusesController {
                 },
               },
             )
-            .then((data) => console.log(data))
+            .then((data) => {
+              if (data) console.log("student skill was marked as DONE?");
+            })
             .catch((err) => console.error(err.original?.sqlMessage || err));
       }
     }
