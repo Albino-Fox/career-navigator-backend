@@ -162,6 +162,22 @@ class VacanciesController {
             .catch((err) => {
               throw err;
             });
+          await db.users
+            .update(
+              { focus_vacancy_id: null },
+              { where: { focus_vacancy_id: req.body.id } },
+            )
+            .catch((err) => {
+              throw err;
+            });
+          await db.users
+            .update(
+              { focus_vacancy_id: req.body.id },
+              { where: { id: user_id } },
+            )
+            .catch((err) => {
+              throw err;
+            });
         } else {
           await db.users
             .update(
